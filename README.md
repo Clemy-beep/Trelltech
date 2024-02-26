@@ -5,7 +5,7 @@ IOS & Android
 
 Made with [Flutter](https://flutter.dev/)
 
-# Features
+## Features
 
 This app manages the core features of Trello, including:
 - Create, edit, and delete boards
@@ -31,11 +31,17 @@ This project includes a documentation folder with the following content:
 - Application Architecture
 - Project Sequence Diagram
 - Life Cycle Diagram
-- Graphical chart of the project
+- Graphical chart of the project <br>
+
 You can find the documentation [here](https://github.com/EpitechMscProPromo2026/T-DEV-600-NCY_1/tree/main/docs)
 
 ## Useful links
 - [Trello](https://trello.com/)
 - [Flutter](https://flutter.dev/)
+- [Trello API endpoints](https://developer.atlassian.com/cloud/trello/rest/api-group-actions/)
 - [Dart](https://dart.dev/) (language used by Flutter)
 - [Android Studio](https://developer.android.com/studio) (recommended for android emulation)
+
+## Authors
+- [Clementine Digny](https://github.com/Clemy-beep)
+- [Guillaume Casal](https://github.com/mortifia)
