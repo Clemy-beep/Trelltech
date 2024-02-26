@@ -1,16 +1,41 @@
-# trelltech
+# Trelltech
 
-A new Flutter project.
+A trello like mobile application for managing tasks and projects.
+IOS & Android
+
+Made with [Flutter](https://flutter.dev/)
+
+# Features
+
+This app manages the core features of Trello, including:
+- Create, edit, and delete boards
+- Create, edit, and delete lists
+- Create, edit, and delete cards
+- Create, edit and delete organizations (or workspaces)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To get started, you'll need to clone the repository and run the following commands:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+```
+to install the dependencies and then run the app with:
+```bash
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Docs 
+This project includes a documentation folder with the following content:
+- Project Class Diagram
+- Application Architecture
+- Project Sequence Diagram
+- Life Cycle Diagram
+- Graphical chart of the project
+You can find the documentation [here](https://github.com/EpitechMscProPromo2026/T-DEV-600-NCY_1/tree/main/docs)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Useful links
+- [Trello](https://trello.com/)
+- [Flutter](https://flutter.dev/)
+- [Dart](https://dart.dev/) (language used by Flutter)
+- [Android Studio](https://developer.android.com/studio) (recommended for android emulation)
