@@ -45,3 +45,4 @@ You can find the documentation [here](https://github.com/EpitechMscProPromo2026/
 ## Authors
 - [Clementine Digny](https://github.com/Clemy-beep)
 - [Guillaume Casal](https://github.com/mortifia)
+- [Damien Richer](https://github.com/LilCisaille)
