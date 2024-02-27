@@ -41,6 +41,7 @@ You can find the documentation [here](https://github.com/EpitechMscProPromo2026/
 - [Trello API endpoints](https://developer.atlassian.com/cloud/trello/rest/api-group-actions/)
 - [Dart](https://dart.dev/) (language used by Flutter)
 - [Android Studio](https://developer.android.com/studio) (recommended for android emulation)
+- [BlueStacks](https://www.bluestacks.com/) (another good option for android emulation - Windows & Mac only)
 
 ## Authors
 - [Clementine Digny](https://github.com/Clemy-beep)
