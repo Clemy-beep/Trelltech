@@ -3,11 +3,22 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'arbory/_router.dart';
+import 'arbory/auth_service.dart';
 
 /// The main entry point for the application.
-void main() => runApp(const MyApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Auth()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
 
 /// The main app.
 class MyApp extends StatelessWidget {

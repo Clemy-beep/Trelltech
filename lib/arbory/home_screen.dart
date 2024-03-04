@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'auth_service.dart';
 
 /// The home screen
 class HomeScreen extends StatelessWidget {
@@ -11,9 +14,20 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Screen')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => context.go('/details'),
-          child: const Text('Go to the Details screen'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.go('/details'),
+              child: const Text('Go to the Details screen'),
+            ),
+            //text to show apitoken
+            Consumer<Auth>(
+              builder: (context, auth, child) {
+                return Text(auth.apiToken ?? 'no token');
+              },
+            ),
+          ],
         ),
       ),
     );
