@@ -30,7 +30,7 @@ This project includes a documentation folder with the following content:
 - Project Class Diagram
 - Application Architecture
 - Project Sequence Diagram
-- Life Cycle Diagram
+- Flow Chart of the app
 - Graphical chart of the project <br>
 
 You can find the documentation [here](https://github.com/EpitechMscProPromo2026/T-DEV-600-NCY_1/tree/main/docs)
