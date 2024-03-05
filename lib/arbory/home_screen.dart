@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
               width: 35.12 * fem,
               height: 40 * fem,
               child: Image.asset(
-                'assets/images/assets/images/a1152233d056776b063f2a0726983f0a.png',
+                'assets/images/menu.png',
                 width: 35.12 * fem,
                 height: 40 * fem,
               ),
@@ -206,7 +206,7 @@ class HomeScreen extends StatelessWidget {
                                     width: 81 * fem,
                                     height: 0.5 * fem,
                                     child: Image.asset(
-                                      'assets/page-1/images/line-3.png',
+                                      'assets/images/menu.png',
                                       width: 81 * fem,
                                       height: 0.5 * fem,
                                     ),
@@ -221,7 +221,7 @@ class HomeScreen extends StatelessWidget {
                           width: 140 * fem,
                           height: 120 * fem,
                           child: Image.asset(
-                            'assets/page-1/images/mange-1.png',
+                            'assets/images/menu.png',
                           ),
                         ),
                       ],

@@ -26,26 +26,31 @@ flutter:
   fonts:
     - family: BungeeShade
       fonts:
-        - asset: fonts/BungeeShade-Regular.ttf
+        - asset: assets/fonts/BungeeShade-Regular.ttf
           weight: 400
     - family: LexendExa
       fonts:
-        - asset: fonts/LexendExa-Regular.ttf
-        - asset: fonts/LexendExa-Black.ttf
+        - asset: assets/fonts/LexendExa-Regular.ttf
+        - asset: assets/fonts/LexendExa-Black.ttf
           weight: 900
-        - asset: fonts/LexendExa-Bold.ttf
+        - asset: assets/fonts/LexendExa-Bold.ttf
           weight: 700
-        - asset: fonts/LexendExa-ExtraBold.ttf
+        - asset: assets/fonts/LexendExa-ExtraBold.ttf
           weight: 800
-        - asset: fonts/LexendExa-ExtraLight.ttf
+        - asset: assets/fonts/LexendExa-ExtraLight.ttf
           weight: 200
-        - asset: fonts/LexendExa-Light.ttf
+        - asset: assets/fonts/LexendExa-Light.ttf
           weight: 300
-        - asset: fonts/LexendExa-Medium.ttf
+        - asset: assets/fonts/LexendExa-Medium.ttf
           weight: 500
-        - asset: fonts/LexendExa-SemiBold.ttf
+        - asset: assets/fonts/LexendExa-SemiBold.ttf
           weight: 600
-        - asset: fonts/LexendExa-Thin.ttf
+        - asset: assets/fonts/LexendExa-Thin.ttf
           weight: 100
-        - asset: fonts/LexendExa-VariableFont_wght.ttf
+        - asset: assets/fonts/LexendExa-VariableFont_wght.ttf
           weight: 400
+
+
+  assets:
+    - assets/images/
+    - assets/fonts/
