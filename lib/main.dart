@@ -25,10 +25,11 @@ void main() {
           },
         ),
         ChangeNotifierProxyProvider<TokenMember, Boards>(
-          create: (context) => Boards(context.read<TokenMember>()),
+          create: (context) =>
+              Boards(context.read<TokenMember>(), context.read<Auth>()),
           update: (context, tokenMember, boards) {
-            boards = boards ?? Boards(tokenMember);
-            boards.tokenMemberUpdate();
+            boards = boards ?? Boards(tokenMember, context.read<Auth>());
+            boards.update();
             return boards;
           },
         ),
