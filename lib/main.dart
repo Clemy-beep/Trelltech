@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'arbory/_router.dart';
 import 'arbory/auth_service.dart';
 import 'arbory/user_info_service.dart';
+import 'arbory/boards_services.dart';
 
 /// The main entry point for the application.
 void main() {
@@ -21,6 +22,14 @@ void main() {
             userInfo = userInfo ?? TokenMember(auth);
             userInfo.authUpdate(auth);
             return userInfo;
+          },
+        ),
+        ChangeNotifierProxyProvider<TokenMember, Boards>(
+          create: (context) => Boards(context.read<TokenMember>()),
+          update: (context, tokenMember, boards) {
+            boards = boards ?? Boards(tokenMember);
+            boards.tokenMemberUpdate();
+            return boards;
           },
         ),
       ],
