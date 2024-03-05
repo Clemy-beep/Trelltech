@@ -84,6 +84,24 @@ flutter:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
+fonts:
+  - family: BungeeShade
+    fonts:
+      - asset: fonts/BungeeShade-Regular.ttf
+        weight: 700
+  - family: LexendExa
+    fonts:
+      - asset: fonts/LexendExa-Regular.ttf
+      - asset: fonts/LexendExa-Black.ttf
+      - asset: fonts/LexendExa-Bold.ttf
+      - asset: fonts/LexendExa-ExtraBold.ttf
+      - asset: fonts/LexendExa-ExtraLight.ttf
+      - asset: fonts/LexendExa-Light.ttf
+      - asset: fonts/LexendExa-Medium.ttf
+      - asset: fonts/LexendExa-SemiBold.ttf
+      - asset: fonts/LexendExa-Thin.ttf
+      - asset: fonts/LexendExa-VariableFont_wght.ttf
+        weight: 700      
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
