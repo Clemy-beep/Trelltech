@@ -28,8 +28,7 @@ flutter run
 ## Docs 
 This project includes a documentation folder with the following content:
 - Project Class Diagram
-- Application Architecture
-- Project Sequence Diagram
+- Application Map
 - Flow Chart of the app
 - Graphical chart of the project <br>
 
