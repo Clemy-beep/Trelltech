@@ -258,9 +258,6 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        // margin: EdgeInsets.fromLTRB(
-                        // 0 * fem, 0 * fem, 31 * fem, 0 * fem),
-                        // width: 17.37 * fem,
                         height: 20 * fem,
                         child: IconButton(
                           icon: const Icon(Icons.question_mark),
@@ -270,9 +267,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        // margin: EdgeInsets.fromLTRB(
-                        // 0 * fem, 0 * fem, 31 * fem, 0 * fem),
-                        // width: 15.66 * fem,
                         height: 20 * fem,
                         child: IconButton(
                           icon: const Icon(Icons.manage_search),
@@ -282,9 +276,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        // margin: EdgeInsets.fromLTRB(
-                        // 0 * fem, 0 * fem, 31 * fem, 0 * fem),
-                        // width: 19.92 * fem,
                         height: 20 * fem,
                         child: IconButton(
                           icon: const Icon(Icons.bug_report),
