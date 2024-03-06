@@ -262,7 +262,7 @@ class HomeScreen extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.question_mark),
                           onPressed: () {
-                            print('IconButton pressed ...');
+                            print('IconButton pressed');
                           },
                         ),
                       ),
@@ -271,7 +271,7 @@ class HomeScreen extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.manage_search),
                           onPressed: () {
-                            print('IconButton pressed ...');
+                            print('IconButton pressed');
                           },
                         ),
                       ),
@@ -280,7 +280,7 @@ class HomeScreen extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.bug_report),
                           onPressed: () {
-                            print('IconButton pressed ...');
+                            print('IconButton pressed ');
                           },
                         ),
                       ),
