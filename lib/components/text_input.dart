@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String name;
+  final Function(String) onTextChanged;
 
   const CustomTextField({
     super.key,
     required this.name,
+    required this.onTextChanged,
   });
+
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,7 @@ class CustomTextField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0, left: 24.0),
           child: Text(
-            '$name :',
+            '${widget.name} :',
             style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
@@ -27,6 +36,8 @@ class CustomTextField extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 24.0),
           width: MediaQuery.of(context).size.width - 32.0,
           child: TextField(
+            controller: _textController,
+            onChanged: widget.onTextChanged,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(16.0),
               filled: true,
