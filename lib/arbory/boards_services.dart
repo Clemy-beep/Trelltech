@@ -13,6 +13,8 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   final Auth auth;
   TokenMember tokenMember;
   List<Board> boards = [];
+  Map<String, Board> boardsById = {};
+  Map<String, List<Board>> boardsByOrganizationId = {};
 
   Boards(this.tokenMember, this.auth) {
     update();
@@ -22,6 +24,9 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty('boards', boards));
+    properties.add(IterableProperty('boardsById', boardsById.values));
+    properties.add(IterableProperty(
+        'boardsByOrganizationId', boardsByOrganizationId.values));
   }
 
   update() async {
@@ -46,23 +51,29 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 
     //check if need update, create, delete
     for (var board in responseJson) {
-      var index = boards.indexWhere((element) => element.id == board['id']);
+      final index = boardsById.keys.toList().indexOf(board['id']);
       if (index == -1) {
-        boards.add(Board.fromJson(board));
+        Board tmpBoard = Board.fromJson(board);
+        boards.add(tmpBoard);
+        boardsById[board['id']] = tmpBoard;
+        if (boardsByOrganizationId[board['idOrganization']] == null) {
+          boardsByOrganizationId[board['idOrganization']] = [tmpBoard];
+        } else {
+          boardsByOrganizationId[board['idOrganization']]!.add(tmpBoard);
+        }
       } else {
         boards[index].update(board);
       }
     }
 
     //for board that not in responseJson
-    boards.removeWhere((element) {
-      var index = responseJson
-          .indexWhere((elementJson) => elementJson['id'] == element.id);
-      if (index == -1) {
-        return true;
+    for (var board in boards) {
+      if (!responseJson.any((element) => element['id'] == board.id)) {
+        boards.remove(board);
+        boardsById.remove(board.id);
+        boardsByOrganizationId.remove(board.idOrganization);
       }
-      return false;
-    });
+    }
 
     notifyListeners();
   }

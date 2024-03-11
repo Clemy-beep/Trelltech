@@ -91,13 +91,20 @@ class DebugScreen extends StatelessWidget {
                                   Text(organization.name),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (var board in organization.boards)
-                                          Text(board.name),
-                                      ],
+                                    child: Consumer<Boards>(
+                                      builder: (context, boards, child) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            for (var board in boards
+                                                        .boardsByOrganizationId[
+                                                    organization.id] ??
+                                                [])
+                                              Text(board.name),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],

@@ -3,28 +3,24 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:trelltech/arbory/boards_services.dart';
 
 import 'user_info_service.dart';
 import 'auth_service.dart';
 
 class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
-  final Auth auth;
   TokenMember tokenMember;
-  Boards boards;
   List<Organization> organizations = [];
+  Map<String, Organization> organizationsById = {};
 
-  Organizations(this.auth, this.tokenMember, this.boards) {
+  Organizations(this.tokenMember) {
     update();
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Auth>('auth', auth));
     properties
         .add(DiagnosticsProperty<TokenMember>('tokenMember', tokenMember));
-    properties.add(DiagnosticsProperty<Boards>('boards', boards));
     properties
         .add(IterableProperty<Organization>('organizations', organizations));
   }
@@ -57,18 +53,21 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
       var index = organizations
           .indexWhere((element) => element.id == organization['id']);
       if (index == -1) {
-        organizations.add(Organization.fromJson(organization));
+        Organization tmpOrganization = Organization.fromJson(organization);
+        organizations.add(tmpOrganization);
+        organizationsById[organization['id']] = tmpOrganization;
       } else {
-        organizations[index].update(organization, boards.boards);
+        organizations[index].update(organization);
       }
     }
 
     //for organization that not in responseJson
-    organizations.removeWhere((element) {
-      var index = responseJson
-          .indexWhere((organization) => organization['id'] == element.id);
-      return index == -1;
-    });
+    for (var organization in organizations) {
+      if (!responseJson.any((element) => element['id'] == organization.id)) {
+        organizations.remove(organization);
+        organizationsById.remove(organization.id);
+      }
+    }
 
     notifyListeners();
   }
@@ -83,7 +82,6 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
   String desc;
   String? domainName;
   List<String> idBoards;
-  List<Board> boards;
   String? idEnterprise;
   String idMemberCreator;
   bool invited;
@@ -101,7 +99,6 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     required this.desc,
     this.domainName,
     required this.idBoards,
-    required this.boards,
     this.idEnterprise,
     required this.idMemberCreator,
     required this.invited,
@@ -121,7 +118,6 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       desc: json['desc'],
       domainName: json['domainName'],
       idBoards: List<String>.from(json['idBoards']),
-      boards: [],
       idEnterprise: json['idEnterprise'],
       idMemberCreator: json['idMemberCreator'],
       invited: json['invited'],
@@ -133,7 +129,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     );
   }
 
-  update(Map<String, dynamic> json, List<Board> allBoards) {
+  update(Map<String, dynamic> json) {
     //check if need update. if need (update and notify)
     bool update = false;
 
@@ -201,27 +197,6 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       logoUrl = json['logoUrl'] != null ? Uri.parse(json['logoUrl']) : null;
       update = true;
     }
-
-    //add board to organization from idBoards and allBoards
-    for (var id in idBoards) {
-      //add / update / delete board
-      var index = boards.indexWhere((element) => element.id == id);
-      if (index == -1) {
-        var board = allBoards.firstWhere((element) => element.id == id);
-        boards.add(board);
-        update = true;
-      }
-    }
-
-    //for board that not in idBoards
-    boards.removeWhere((element) {
-      var index = idBoards.indexWhere((id) => id == element.id);
-      if (index == -1) {
-        update = true;
-        return true;
-      }
-      return false;
-    });
 
     if (update) {
       notifyListeners();

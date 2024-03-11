@@ -34,12 +34,10 @@ void main() {
             return boards;
           },
         ),
-        ChangeNotifierProxyProvider3<Auth, TokenMember, Boards, Organizations>(
-          create: (context) => Organizations(context.read<Auth>(),
-              context.read<TokenMember>(), context.read<Boards>()),
-          update: (context, auth, tokenMember, boards, organizations) {
-            organizations =
-                organizations ?? Organizations(auth, tokenMember, boards);
+        ChangeNotifierProxyProvider<TokenMember, Organizations>(
+          create: (context) => Organizations(context.read<TokenMember>()),
+          update: (context, tokenMember, organizations) {
+            organizations = organizations ?? Organizations(tokenMember);
             organizations.update();
             return organizations;
           },
