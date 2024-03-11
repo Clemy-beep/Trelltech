@@ -18,7 +18,7 @@ class CustomCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16.0),
       child: Card(
-        color: const Color(0xFFFFF5D2),
+        color: const Color(0xfffff5d2),
         child: ListTile(
           leading: const Icon(
             defaultIcon,
