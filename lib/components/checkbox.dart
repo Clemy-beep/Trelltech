@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class CheckboxExample extends StatefulWidget {
   final String name;
+  final Function(bool) onStateChanged;
 
   const CheckboxExample({
     super.key,
     required this.name,
+    required this.onStateChanged,
   });
 
   @override
@@ -36,6 +38,8 @@ class _CheckboxExampleState extends State<CheckboxExample> {
       onChanged: (bool? value) {
         setState(() {
           isChecked = value!;
+          // Notify the parent about the state change
+          widget.onStateChanged(isChecked);
         });
       },
       side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(
