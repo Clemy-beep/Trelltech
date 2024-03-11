@@ -4,7 +4,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24.0),
+      margin: const EdgeInsets.symmetric(horizontal: 24.0),
       width: MediaQuery.of(context).size.width - 32.0,
       child: TextField(
         decoration: InputDecoration(
