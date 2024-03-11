@@ -4,9 +4,9 @@ class CustomTextField extends StatelessWidget {
   final String name;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.name,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CustomTextField extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0, left: 24.0),
           child: Text(
             '$name :',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
             ),

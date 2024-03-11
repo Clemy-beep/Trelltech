@@ -39,12 +39,24 @@ class CustomCard extends StatelessWidget {
               color: Color(0xff141946),
             ),
           ),
-          trailing: Text(
-            date,
-            style: const TextStyle(
-              fontFamily: 'LexendExa',
-              color: Color(0xff141946),
-            ),
+          trailing: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Text(
+                'Created on:',
+                style: TextStyle(
+                  fontFamily: 'LexendExa',
+                  color: Color(0xff141946),
+                ),
+              ),
+              Text(
+                date,
+                style: const TextStyle(
+                  fontFamily: 'LexendExa',
+                  color: Color(0xff141946),
+                ),
+              ),
+            ],
           ),
           contentPadding: const EdgeInsets.all(16),
           shape: const RoundedRectangleBorder(
