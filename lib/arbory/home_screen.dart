@@ -104,8 +104,8 @@ class HomeScreen extends StatelessWidget {
                                   child: Center(
                                     child: Align(
                                       child: SizedBox(
-                                        width: 215 * fem,
-                                        height: 53 * fem,
+                                        width: 400,
+                                        height: 150,
                                         child: RichText(
                                           textAlign: TextAlign.center,
                                           text: TextSpan(
