@@ -6,12 +6,12 @@ class CustomIconButton extends IconButton {
     required VoidCallback super.onPressed,
   }) : super(
           icon: const Icon(Icons.draw),
-          color: const Color(0xFFFDDA5F),
+          color: const Color(0xfffcda5e),
         );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TestButton extends StatelessWidget {
+  const TestButton({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -19,7 +19,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
         MaterialState.focused,
       };
       if (states.any(interactiveStates.contains)) {
-        return Color.fromARGB(255, 243, 215, 33);
+        return const Color(0xfffcc52e);
       }
       return const Color.fromARGB(255, 255, 255, 255);
     }
@@ -34,9 +34,21 @@ class _CheckboxExampleState extends State<CheckboxExample> {
         });
       },
       side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(
-            color: Color(0xffffe4a1),
+            color: Color(0xfffcc52e),
             width: 2,
           )),
     );
   }
+}
+
+void main() {
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: CheckboxExample(),
+        ),
+      ),
+    ),
+  );
 }
