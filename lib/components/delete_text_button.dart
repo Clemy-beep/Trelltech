@@ -10,8 +10,8 @@ class CustomIconButton extends IconButton {
         );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TestButton extends StatelessWidget {
+  const TestButton({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

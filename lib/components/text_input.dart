@@ -1,34 +1,43 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.all(16.0), // Adjust the padding as needed
-        filled: true,
-        fillColor: const Color(0xffffe4a1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
-  }
-}
+  final String name;
 
-class MyApp extends StatelessWidget {
+  const CustomTextField({
+    super.key,
+    required this.name,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('My App'),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0, left: 24.0),
+          child: Text(
+            '$name :',
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-        body: Center(
-          child: CustomTextField(),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24.0),
+          width: MediaQuery.of(context).size.width - 32.0,
+          child: TextField(
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.all(16.0),
+              filled: true,
+              fillColor: const Color(0xffffe4a1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
