@@ -20,9 +20,6 @@ class CustomListTile extends StatelessWidget {
         ),
         child: ListTile(
           contentPadding: const EdgeInsets.all(16.0),
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(memberAvatar),
-          ),
           title: Text(
             cardTitle,
             style: const TextStyle(
@@ -30,6 +27,9 @@ class CustomListTile extends StatelessWidget {
               color: Color(0xff141946),
             ),
           ),
+          trailing: CircleAvatar(
+            backgroundImage: NetworkImage(memberAvatar),
+          )
         ));
   }
 }

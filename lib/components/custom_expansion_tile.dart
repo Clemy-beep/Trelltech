@@ -22,7 +22,20 @@ class CustomExpansionTile extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
+        borderOnForeground: false,
         child: ExpansionTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            side: const BorderSide(
+              color: Colors.transparent,
+              width: 1,
+            ),
+          ),
+          collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          expandedAlignment: Alignment.centerLeft,
+          clipBehavior: Clip.antiAlias,
           leading: const Icon(
             defaultIcon,
             size: 24.0,
@@ -44,6 +57,7 @@ class CustomExpansionTile extends StatelessWidget {
           ),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           tilePadding: const EdgeInsets.all(16.0),
+          childrenPadding: const EdgeInsets.all(16.0),
           children: children,
         ),
       ),

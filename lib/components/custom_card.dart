@@ -11,7 +11,7 @@ class CustomCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String date;
-  static const IconData defaultIcon = Icons.drag_indicator_sharp;
+  static const IconData defaultIcon = Icons.workspaces_outlined;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +41,7 @@ class CustomCard extends StatelessWidget {
           ),
           trailing: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 'Created on:',
