@@ -5,8 +5,8 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:trelltech/arbory/user_info_service.dart';
 
+import 'user_info_service.dart';
 import 'auth_service.dart';
 
 class Boards with ChangeNotifier, DiagnosticableTreeMixin {
@@ -24,14 +24,11 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
     properties.add(IterableProperty('boards', boards));
   }
 
-  void tokenMemberUpdate() {}
-
   update() async {
     if (tokenMember.auth.apiToken == null) {
       return;
     }
 
-    log("WOLOLOLOLOLO");
     final response = await http.get(
         Uri.parse(
             "https://api.trello.com/1/members/${tokenMember.member!.id}/boards"),
