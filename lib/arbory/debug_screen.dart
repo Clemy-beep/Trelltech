@@ -11,9 +11,9 @@ import 'organization_service.dart';
 import 'user_info_service.dart';
 
 /// The home screen
-class HomeScreen extends StatelessWidget {
-  /// Constructs a [HomeScreen]
-  const HomeScreen({super.key});
+class DebugScreen extends StatelessWidget {
+  /// Constructs a [DebugScreen]
+  const DebugScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
