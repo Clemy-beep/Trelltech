@@ -22,7 +22,6 @@ class CustomButton extends TextButton {
           Text(text.toLowerCase(),
               style: const TextStyle(
                 fontFamily: 'LexendExa',
-                letterSpacing: 10,
                 color: Colors.black,
               )
           ),

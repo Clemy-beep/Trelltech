@@ -41,7 +41,7 @@ class Auth with ChangeNotifier, DiagnosticableTreeMixin {
               log(apiToken!);
 
               // close webview
-              router.push('/');
+              router.push('/details');
             }
             return NavigationDecision.navigate;
           },
