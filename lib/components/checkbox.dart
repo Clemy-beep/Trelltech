@@ -40,15 +40,3 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     );
   }
 }
-
-void main() {
-  runApp(
-    const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: CheckboxExample(),
-        ),
-      ),
-    ),
-  );
-}
