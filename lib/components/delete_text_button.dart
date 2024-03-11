@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomIconButton extends IconButton {
-  const CustomIconButton({
+class CustomIconDelete extends IconButton {
+  const CustomIconDelete({
     super.key,
     required VoidCallback super.onPressed,
   }) : super(
@@ -17,7 +17,7 @@ class TestButton extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: CustomIconButton(
+          child: CustomIconDelete(
             onPressed: () {
               print('IconButton Pressed!');
             },
