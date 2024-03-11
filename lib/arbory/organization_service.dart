@@ -11,16 +11,22 @@ import 'auth_service.dart';
 class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
   final Auth auth;
   TokenMember tokenMember;
+  Boards boards;
   List<Organization> organizations = [];
 
-  Organizations(this.tokenMember, this.auth) {
+  Organizations(this.auth, this.tokenMember, this.boards) {
     update();
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty('organizations', organizations));
+    properties.add(DiagnosticsProperty<Auth>('auth', auth));
+    properties
+        .add(DiagnosticsProperty<TokenMember>('tokenMember', tokenMember));
+    properties.add(DiagnosticsProperty<Boards>('boards', boards));
+    properties
+        .add(IterableProperty<Organization>('organizations', organizations));
   }
 
   update() async {
@@ -28,6 +34,9 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
       return;
     }
 
+    if (tokenMember.member?.id == null) {
+      return;
+    }
     final response = await http.get(
         Uri.parse(
             "https://api.trello.com/1/members/${tokenMember.member!.id}/organizations"),
@@ -50,7 +59,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
       if (index == -1) {
         organizations.add(Organization.fromJson(organization));
       } else {
-        organizations[index].update(organization);
+        organizations[index].update(organization, boards.boards);
       }
     }
 
@@ -124,7 +133,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     );
   }
 
-  update(Map<String, dynamic> json) {
+  update(Map<String, dynamic> json, List<Board> allBoards) {
     //check if need update. if need (update and notify)
     bool update = false;
 
@@ -192,6 +201,27 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       logoUrl = json['logoUrl'] != null ? Uri.parse(json['logoUrl']) : null;
       update = true;
     }
+
+    //add board to organization from idBoards and allBoards
+    for (var id in idBoards) {
+      //add / update / delete board
+      var index = boards.indexWhere((element) => element.id == id);
+      if (index == -1) {
+        var board = allBoards.firstWhere((element) => element.id == id);
+        boards.add(board);
+        update = true;
+      }
+    }
+
+    //for board that not in idBoards
+    boards.removeWhere((element) {
+      var index = idBoards.indexWhere((id) => id == element.id);
+      if (index == -1) {
+        update = true;
+        return true;
+      }
+      return false;
+    });
 
     if (update) {
       notifyListeners();

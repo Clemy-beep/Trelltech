@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trelltech/arbory/organization_service.dart';
 
 import 'arbory/_router.dart';
 import 'arbory/auth_service.dart';
@@ -31,6 +32,16 @@ void main() {
             boards = boards ?? Boards(tokenMember, context.read<Auth>());
             boards.update();
             return boards;
+          },
+        ),
+        ChangeNotifierProxyProvider3<Auth, TokenMember, Boards, Organizations>(
+          create: (context) => Organizations(context.read<Auth>(),
+              context.read<TokenMember>(), context.read<Boards>()),
+          update: (context, auth, tokenMember, boards, organizations) {
+            organizations =
+                organizations ?? Organizations(auth, tokenMember, boards);
+            organizations.update();
+            return organizations;
           },
         ),
       ],
