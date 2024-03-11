@@ -50,15 +50,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
 
     //check if need update, create, delete
     for (var organization in responseJson) {
-      var index = organizations
-          .indexWhere((element) => element.id == organization['id']);
-      if (index == -1) {
-        Organization tmpOrganization = Organization.fromJson(organization);
-        organizations.add(tmpOrganization);
-        organizationsById[organization['id']] = tmpOrganization;
-      } else {
-        organizations[index].update(organization);
-      }
+      _updateData(organization);
     }
 
     //for organization that not in responseJson
@@ -71,10 +63,52 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
 
     notifyListeners();
   }
+
+  _updateData(dynamic organization) {
+    var index =
+        organizations.indexWhere((element) => element.id == organization['id']);
+    if (index == -1) {
+      Organization tmpOrganization =
+          Organization.fromJson(organization, tokenMember, this);
+      organizations.add(tmpOrganization);
+      organizationsById[organization['id']] = tmpOrganization;
+    } else {
+      organizations[index]._updateJson(organization);
+    }
+  }
+
+  createOrganization(
+      String displayName, String? desc, String? name, Uri? website) async {
+    if (tokenMember.auth.apiToken == null) {
+      return;
+    }
+
+    if (tokenMember.member?.id == null) {
+      return;
+    }
+    final response = await http.post(
+      Uri.parse(
+          "https://api.trello.com/1/organizations?displayName=$displayName&desc=$desc&name=$name&website=$website"),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    _updateData(responseJson);
+    notifyListeners();
+  }
 }
 
 class Organization with ChangeNotifier, DiagnosticableTreeMixin {
-  //TODO: Constructor not finish and update have not all fields yet
+  TokenMember tokenMember;
+  Organizations organizations;
   final String id;
   String name;
   List<String> credits;
@@ -107,9 +141,12 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     required this.url,
     this.logoUrl,
     required this.memberships,
+    required this.tokenMember,
+    required this.organizations,
   });
 
-  factory Organization.fromJson(Map<String, dynamic> json) {
+  factory Organization.fromJson(Map<String, dynamic> json,
+      TokenMember tokenMember, Organizations organizations) {
     return Organization(
       id: json['id'],
       name: json['name'],
@@ -126,10 +163,78 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       url: Uri.parse(json['url']),
       logoUrl: json['logoUrl'] != null ? Uri.parse(json['logoUrl']) : null,
       memberships: [],
+      tokenMember: tokenMember,
+      organizations: organizations,
     );
   }
 
-  update(Map<String, dynamic> json) {
+  update(
+    String? name,
+    String? displayName,
+    String? desc,
+    Uri? website,
+    String? prefsAssociatedDomain,
+    String? prefsExternalMembersDisabled,
+    String? prefsGoogleAppsVersion,
+    String? prefsBoardVisibilityRestrictOrg,
+    String? prefsBoardVisibilityRestrictPrivate,
+    String? prefsBoardVisibilityRestrictPublic,
+    String? prefsOrgInviteRestrict,
+    String? prefsPermissionLevel,
+  ) async {
+    if (tokenMember.auth.apiToken == null) {
+      return;
+    }
+
+    if (tokenMember.member?.id == null) {
+      return;
+    }
+    final response = await http.post(
+      Uri.parse(
+          "https://api.trello.com/1/organizations/${id}?name=$name&displayName=$displayName&desc=$desc&website=$website&prefs/associatedDomain=$prefsAssociatedDomain&prefs/externalMembersDisabled=$prefsExternalMembersDisabled&prefs/googleAppsVersion=$prefsGoogleAppsVersion&prefs/boardVisibilityRestrict/org=$prefsBoardVisibilityRestrictOrg&prefs/boardVisibilityRestrict/private=$prefsBoardVisibilityRestrictPrivate&prefs/boardVisibilityRestrict/public=$prefsBoardVisibilityRestrictPublic&prefs/orgInviteRestrict=$prefsOrgInviteRestrict&prefs/permissionLevel=$prefsPermissionLevel"),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    _update();
+  }
+
+  _update() async {
+    if (tokenMember.auth.apiToken == null) {
+      return;
+    }
+
+    if (tokenMember.member?.id == null) {
+      return;
+    }
+
+    final response = await http.get(
+        Uri.parse("https://api.trello.com/1/organizations/${id}"),
+        headers: {
+          'Authorization':
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+        });
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+    _updateJson(responseJson);
+    notifyListeners();
+  }
+
+  _updateJson(Map<String, dynamic> json) {
     //check if need update. if need (update and notify)
     bool update = false;
 
@@ -201,6 +306,36 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     if (update) {
       notifyListeners();
     }
+  }
+
+  delete() async {
+    if (tokenMember.auth.apiToken == null) {
+      return;
+    }
+
+    if (tokenMember.member?.id == null) {
+      return;
+    }
+    final response = await http.delete(
+      Uri.parse("https://api.trello.com/1/organizations/${id}"),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    //delete organization in provider
+    organizations.organizationsById.remove(id);
+    organizations.organizations.remove(this);
+
+    notifyListeners();
+
+    organizations.update();
   }
 }
 
