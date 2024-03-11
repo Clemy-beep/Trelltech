@@ -41,7 +41,7 @@ class Auth with ChangeNotifier, DiagnosticableTreeMixin {
               log(apiToken!);
 
               // close webview
-              router.push('/details');
+              router.push('/home');
             }
             return NavigationDecision.navigate;
           },
@@ -54,6 +54,12 @@ class Auth with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void signIn() {}
+
+  void signOut() {
+    apiToken = null;
+    notifyListeners();
+    router.pushReplacement('/');
+  }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
