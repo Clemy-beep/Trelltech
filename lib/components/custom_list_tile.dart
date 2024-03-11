@@ -13,24 +13,23 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: const Color(0xffffe5a1),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(memberAvatar),
+        margin: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: const Color(0xffffe5a1),
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        title: Text(
-          cardTitle,
-          style: const TextStyle(
-            fontFamily: 'LexendExa',
-            color: Colors.black,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(16.0),
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(memberAvatar),
           ),
-        ),
-      ),
-    );
+          title: Text(
+            cardTitle,
+            style: const TextStyle(
+              fontFamily: 'LexendExa',
+              color: Color(0xff141946),
+            ),
+          ),
+        ));
   }
 }

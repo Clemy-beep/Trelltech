@@ -23,27 +23,27 @@ class CustomCard extends StatelessWidget {
           leading: const Icon(
             defaultIcon,
             size: 24.0,
-            color: Colors.black,
+            color: Color(0xff141946),
           ),
           title: Text(
             title,
             style: const TextStyle(
               fontFamily: 'LexendExa',
-              color: Colors.black,
+              color: Color(0xff141946),
             ),
           ),
           subtitle: Text(
             subtitle,
             style: const TextStyle(
               fontFamily: 'LexendExa',
-              color: Colors.black,
+              color: Color(0xff141946),
             ),
           ),
           trailing: Text(
             date,
             style: const TextStyle(
               fontFamily: 'LexendExa',
-              color: Colors.black,
+              color: Color(0xff141946),
             ),
           ),
           contentPadding: const EdgeInsets.all(16),
