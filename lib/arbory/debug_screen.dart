@@ -180,6 +180,7 @@ class DebugScreenListsCards extends StatelessWidget {
     return Consumer<Cards>(
       builder: (context, cards, child) {
         return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var card in cards.cardsByListId[listId] ?? []) Text(card.name),

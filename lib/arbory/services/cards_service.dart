@@ -116,7 +116,7 @@ class Card {
   bool dueComplete;
   String dateLastActivity;
   String? desc;
-  String? descData;
+  // String? descData;
   String? due;
   int? dueReminder;
   String? email;
@@ -149,7 +149,7 @@ class Card {
     required this.dueComplete,
     required this.dateLastActivity,
     this.desc,
-    this.descData,
+    // this.descData,
     this.due,
     this.dueReminder,
     this.email,
@@ -202,10 +202,10 @@ class Card {
       desc = json['desc'];
       update = true;
     }
-    if (descData != json['descData']) {
-      descData = json['descData'];
-      update = true;
-    }
+    // if (descData != json['descData']) {
+    //   descData = json['descData'];
+    //   update = true;
+    // }
     if (due != json['due']) {
       due = json['due'];
       update = true;
@@ -231,11 +231,11 @@ class Card {
       update = true;
     }
     if (idMembers != json['idMembers']) {
-      idMembers = json['idMembers'];
+      idMembers = json['idMembers'].cast<String>();
       update = true;
     }
     if (idMembersVoted != json['idMembersVoted']) {
-      idMembersVoted = json['idMembersVoted'];
+      idMembersVoted = json['idMembersVoted'].cast<String>();
       update = true;
     }
     if (idShort != json['idShort']) {
@@ -250,7 +250,7 @@ class Card {
     //!TODO labels not implemented
 
     if (idLabels != json['idLabels']) {
-      idLabels = json['idLabels'];
+      idLabels = json['idLabels'].cast<String>();
       update = true;
     }
     if (manualCoverAttachment != json['manualCoverAttachment']) {
@@ -270,7 +270,7 @@ class Card {
       update = true;
     }
     if (shortUrl != json['shortUrl']) {
-      shortUrl = json['shortUrl'];
+      shortUrl = Uri.parse(json['shortUrl'] ?? "");
       update = true;
     }
     if (start != json['start']) {
@@ -282,7 +282,7 @@ class Card {
       update = true;
     }
     if (url != json['url']) {
-      url = json['url'];
+      url = Uri.parse(json['url'] ?? "");
       update = true;
     }
 
@@ -309,27 +309,27 @@ class Card {
       dueComplete: json['dueComplete'],
       dateLastActivity: json['dateLastActivity'],
       desc: json['desc'],
-      descData: json['descData'],
+      // descData: json['descData'],
       due: json['due'],
       dueReminder: json['dueReminder'],
       email: json['email'],
       idBoard: json['idBoard'],
       idCheckLists: json['idCheckLists'],
       idList: json['idList'],
-      // idMembers: json['idMembers'],
-      idMembers: [],
-      idMembersVoted: json['idMembersVoted'],
+      idMembers: json['idMembers'].cast<String>(),
+      // idMembers: [],
+      idMembersVoted: json['idMembersVoted'].cast<String>(),
       idShort: json['idShort'],
       idAttachmentCover: json['idAttachmentCover'],
-      idLabels: json['idLabels'],
+      idLabels: json['idLabels'].cast<String>(),
       manualCoverAttachment: json['manualCoverAttachment'],
       name: json['name'],
       pos: json['pos'],
       shortLink: json['shortLink'],
-      shortUrl: json['shortUrl'],
+      shortUrl: Uri.parse(json['shortUrl'] ?? ""),
       start: json['start'],
       subscribed: json['subscribed'],
-      url: json['url'],
+      url: Uri.parse(json['url'] ?? ""),
       isTemplate: json['isTemplate'],
       cardRole: json['cardRole'],
     );
