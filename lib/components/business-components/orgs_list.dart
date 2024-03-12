@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trelltech/arbory/services/organization_service.dart';
@@ -13,8 +14,10 @@ class OrganizationsList extends StatelessWidget {
       builder: (context, organizations, child) {
         return ListView.builder(
           itemCount: organizations.organizations.length,
+          dragStartBehavior: DragStartBehavior.start,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
+          primary: false,
           itemBuilder: (context, index) {
             return CustomCard(
               iconData: Icons.workspaces_outlined,
