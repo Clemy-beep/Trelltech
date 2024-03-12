@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../arbory/services/boards_services.dart';
@@ -22,7 +23,9 @@ class BoardsList extends StatelessWidget {
               iconData: Icons.dataset_outlined,
               title: boards.boards[index].name,
               subtitle: boards.boards[index].desc == '' ? 'No description' : boards.boards[index].desc,
-              onTap: () => {},
+              onTap: () => {
+                context.go('/board/${boards.boards[index].id}')
+              },
             );
           },
         );
