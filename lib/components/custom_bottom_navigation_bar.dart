@@ -69,5 +69,4 @@ class CustomNavigationBar extends StatelessWidget {
         )
     );
   }
-
 }
