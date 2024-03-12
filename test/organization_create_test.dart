@@ -22,13 +22,13 @@ void main() {
     });
 
     test('createOrganization sends a valid request', () async {
-      final expectedDisplayName = 'New Organization';
-      final expectedDesc = 'Description for the new organization';
-      final expectedName = 'new_organization';
+      const expectedDisplayName = 'New Organization';
+      const expectedDesc = 'Description for the new organization';
+      const expectedName = 'new_organization';
       final expectedWebsite =
           Uri.parse('https://api.trello.com/1/organizations/');
 
-      when(mockTokenMember.auth.apiToken).thenReturn('valid_api_token');
+      when(mockTokenMember._auth.apiToken).thenReturn('valid_api_token');
       when(mockTokenMember.member?.id).thenReturn('valid_member_id');
 
       final expectedUrl = Uri.parse(
@@ -57,12 +57,12 @@ void main() {
 
     test('createOrganization updates organizations on success', () async {
       // Arrange
-      final expectedDisplayName = 'New Organization';
-      final expectedDesc = 'Description for the new organization';
-      final expectedName = 'new_organization';
+      const expectedDisplayName = 'New Organization';
+      const expectedDesc = 'Description for the new organization';
+      const expectedName = 'new_organization';
       final expectedWebsite = Uri.parse('https://example.com');
 
-      when(mockTokenMember.auth.apiToken).thenReturn('valid_api_token');
+      when(mockTokenMember._auth.apiToken).thenReturn('valid_api_token');
       when(mockTokenMember.member?.id).thenReturn('valid_member_id');
 
       final expectedUrl = Uri.parse(
