@@ -1,17 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trelltech/arbory/services/auth_service.dart';
 import 'package:trelltech/arbory/services/user_info_service.dart';
+import 'package:trelltech/components/business-components/boards_list.dart';
+import 'package:trelltech/components/business-components/orgs_list.dart';
 import 'package:trelltech/components/custom_bottom_navigation_bar.dart';
-import 'package:trelltech/components/checkbox.dart';
-import 'package:trelltech/components/custom_card.dart';
-import 'package:trelltech/components/custom_list_tile.dart';
-import 'package:trelltech/components/custom_expansion_tile.dart';
-import 'package:trelltech/components/delete_text_button.dart';
-import 'package:trelltech/components/edit_text_button.dart';
+import 'package:trelltech/components/custom_button.dart';
+import 'package:trelltech/components/custom_title.dart';
 
-class OrgsAndBoardsListScreens extends StatelessWidget {
+class OrgsAndBoardsListScreens extends StatelessWidget{
   // Constructs a [OrgsAndBoardsListScreens]
   const OrgsAndBoardsListScreens({super.key});
 
@@ -32,33 +28,32 @@ class OrgsAndBoardsListScreens extends StatelessWidget {
                     fontSize: 14,
                     color: Colors.black,
                   ),
-                ));
+                )
+            );
           },
         ),
       ),
       body: SingleChildScrollView(
-        child: Center(
+          padding: const EdgeInsets.only(top: 16, bottom: 24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text('Orgs and Boards List Screens'),
-              CustomCard(
-                title: 'workspace',
-                subtitle: 'subtitle',
-                date: 'date',
-              ),
-              CustomListTile(cardTitle: 'Hey', memberAvatar: ''),
-              CustomExpansionTile(
-                  title: 'workspaces',
-                  subtitle: 'fo',
-                  children: [
-                    CustomListTile(cardTitle: '"qff', memberAvatar: '')
-                  ]),
-              CustomIconDelete(onPressed: () => {print('delete')}),
-              CustomIconEdit(onPressed: () => {print('edit')}),
-            ],
-          ),
-        ),
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const CustomTitle(text: "Organizations"),
+                const OrganizationsList(),
+                CustomButton(
+                    text: 'create workspace',
+                    iconName: Icons.add,
+                    onPressed: (){}
+                ),
+                const CustomTitle(text: 'Boards'),
+                const BoardsList(),
+                CustomButton(
+                    text: 'create board',
+                    iconName: Icons.add,
+                    onPressed: (){}
+                ),
+              ]
+          )
       ),
       bottomNavigationBar: const CustomNavigationBar(),
     );
