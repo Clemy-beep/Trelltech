@@ -10,13 +10,13 @@ import 'user_info_service.dart';
 import 'auth_service.dart';
 
 class Boards with ChangeNotifier, DiagnosticableTreeMixin {
-  final Auth auth;
-  TokenMember tokenMember;
+  final Auth _auth;
+  final TokenMember _tokenMember;
   List<Board> boards = [];
   Map<String, Board> boardsById = {};
   Map<String, List<Board>> boardsByOrganizationId = {};
 
-  Boards(this.tokenMember, this.auth) {
+  Boards(this._tokenMember, this._auth) {
     update();
   }
 
@@ -30,16 +30,16 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   update() async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
     final response = await http.get(
         Uri.parse(
-            "https://api.trello.com/1/members/${tokenMember.member!.id}/boards"),
+            "https://api.trello.com/1/members/${_tokenMember.member!.id}/boards"),
         headers: {
           'Authorization':
-              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
         });
 
     if (response.statusCode >= 400) {

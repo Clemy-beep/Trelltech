@@ -8,13 +8,13 @@ import 'auth_service.dart';
 import 'dart:developer';
 
 class TokenMember with ChangeNotifier, DiagnosticableTreeMixin {
-  Auth auth;
+  Auth _auth;
   Member? member;
 
-  TokenMember(this.auth);
+  TokenMember(this._auth);
 
   authUpdate(Auth auth) {
-    this.auth = auth;
+    _auth = auth;
     if (auth.apiToken != null) {
       _tokenMemberUpdate();
     } else {
@@ -24,15 +24,15 @@ class TokenMember with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   _tokenMemberUpdate() async {
-    if (auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
     //call api to get user info
     final response = await http.get(
-        Uri.parse("https://api.trello.com/1/tokens/${auth.apiToken}/member"),
+        Uri.parse("https://api.trello.com/1/tokens/${_auth.apiToken}/member"),
         headers: {
           HttpHeaders.authorizationHeader:
-              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${auth.apiToken}"',
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
         });
     if (response.statusCode >= 400) {
       log(response.body);

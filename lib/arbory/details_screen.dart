@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'auth_service.dart';
+import 'services/auth_service.dart';
 
 /// The details screen
 class DetailsScreen extends StatelessWidget {

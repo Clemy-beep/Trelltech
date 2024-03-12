@@ -8,11 +8,12 @@ import 'user_info_service.dart';
 import 'auth_service.dart';
 
 class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
-  TokenMember tokenMember;
+  final TokenMember _tokenMember;
+  final Auth _auth;
   List<Organization> organizations = [];
   Map<String, Organization> organizationsById = {};
 
-  Organizations(this.tokenMember) {
+  Organizations(this._tokenMember, this._auth) {
     update();
   }
 
@@ -20,25 +21,25 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty<TokenMember>('tokenMember', tokenMember));
+        .add(DiagnosticsProperty<TokenMember>('tokenMember', _tokenMember));
     properties
         .add(IterableProperty<Organization>('organizations', organizations));
   }
 
   update() async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
-    if (tokenMember.member?.id == null) {
+    if (_tokenMember.member?.id == null) {
       return;
     }
     final response = await http.get(
         Uri.parse(
-            "https://api.trello.com/1/members/${tokenMember.member!.id}/organizations"),
+            "https://api.trello.com/1/members/${_tokenMember.member!.id}/organizations"),
         headers: {
           'Authorization':
-              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
         });
 
     if (response.statusCode >= 400) {
@@ -69,7 +70,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
         organizations.indexWhere((element) => element.id == organization['id']);
     if (index == -1) {
       Organization tmpOrganization =
-          Organization.fromJson(organization, tokenMember, this);
+          Organization.fromJson(organization, _tokenMember, _auth, this);
       organizations.add(tmpOrganization);
       organizationsById[organization['id']] = tmpOrganization;
     } else {
@@ -79,11 +80,11 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
 
   createOrganization(
       String displayName, String? desc, String? name, Uri? website) async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
-    if (tokenMember.member?.id == null) {
+    if (_tokenMember.member?.id == null) {
       return;
     }
     final response = await http.post(
@@ -91,7 +92,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
           "https://api.trello.com/1/organizations?displayName=$displayName&desc=$desc&name=$name&website=$website"),
       headers: {
         'Authorization':
-            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
       },
     );
 
@@ -107,7 +108,8 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
 }
 
 class Organization with ChangeNotifier, DiagnosticableTreeMixin {
-  TokenMember tokenMember;
+  final TokenMember _tokenMember;
+  final Auth _auth;
   Organizations organizations;
   final String id;
   String name;
@@ -141,12 +143,14 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     required this.url,
     this.logoUrl,
     required this.memberships,
-    required this.tokenMember,
+    required TokenMember tokenMember,
+    required Auth auth,
     required this.organizations,
-  });
+  })  : _tokenMember = tokenMember,
+        _auth = auth;
 
   factory Organization.fromJson(Map<String, dynamic> json,
-      TokenMember tokenMember, Organizations organizations) {
+      TokenMember tokenMember, Auth auth, Organizations organizations) {
     return Organization(
       id: json['id'],
       name: json['name'],
@@ -164,6 +168,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       logoUrl: json['logoUrl'] != null ? Uri.parse(json['logoUrl']) : null,
       memberships: [],
       tokenMember: tokenMember,
+      auth: auth,
       organizations: organizations,
     );
   }
@@ -182,11 +187,11 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     String? prefsOrgInviteRestrict,
     String? prefsPermissionLevel,
   ) async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
-    if (tokenMember.member?.id == null) {
+    if (_tokenMember.member?.id == null) {
       return;
     }
     final response = await http.post(
@@ -194,7 +199,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
           "https://api.trello.com/1/organizations/${id}?name=$name&displayName=$displayName&desc=$desc&website=$website&prefs/associatedDomain=$prefsAssociatedDomain&prefs/externalMembersDisabled=$prefsExternalMembersDisabled&prefs/googleAppsVersion=$prefsGoogleAppsVersion&prefs/boardVisibilityRestrict/org=$prefsBoardVisibilityRestrictOrg&prefs/boardVisibilityRestrict/private=$prefsBoardVisibilityRestrictPrivate&prefs/boardVisibilityRestrict/public=$prefsBoardVisibilityRestrictPublic&prefs/orgInviteRestrict=$prefsOrgInviteRestrict&prefs/permissionLevel=$prefsPermissionLevel"),
       headers: {
         'Authorization':
-            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
       },
     );
 
@@ -208,11 +213,11 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   _update() async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
-    if (tokenMember.member?.id == null) {
+    if (_tokenMember.member?.id == null) {
       return;
     }
 
@@ -220,7 +225,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
         Uri.parse("https://api.trello.com/1/organizations/${id}"),
         headers: {
           'Authorization':
-              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
         });
 
     if (response.statusCode >= 400) {
@@ -309,18 +314,18 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   delete() async {
-    if (tokenMember.auth.apiToken == null) {
+    if (_auth.apiToken == null) {
       return;
     }
 
-    if (tokenMember.member?.id == null) {
+    if (_tokenMember.member?.id == null) {
       return;
     }
     final response = await http.delete(
       Uri.parse("https://api.trello.com/1/organizations/${id}"),
       headers: {
         'Authorization':
-            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${tokenMember.auth.apiToken}"',
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
       },
     );
 

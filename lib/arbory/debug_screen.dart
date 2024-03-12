@@ -1,14 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'auth_service.dart';
-import 'boards_services.dart';
-import 'organization_service.dart';
-import 'user_info_service.dart';
+import 'services/auth_service.dart';
+import 'services/boards_services.dart';
+import 'services/organization_service.dart';
+import 'services/user_info_service.dart';
 
 /// The home screen
 class DebugScreen extends StatelessWidget {

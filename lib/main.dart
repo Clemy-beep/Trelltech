@@ -4,12 +4,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trelltech/arbory/organization_service.dart';
 
 import 'arbory/_router.dart';
-import 'arbory/auth_service.dart';
-import 'arbory/user_info_service.dart';
-import 'arbory/boards_services.dart';
+
+import 'arbory/services/auth_service.dart';
+import 'arbory/services/user_info_service.dart';
+import 'arbory/services/boards_services.dart';
+import 'arbory/services/organization_service.dart';
+import 'arbory/services/list_service.dart';
 
 /// The main entry point for the application.
 void main() {
@@ -34,12 +36,22 @@ void main() {
             return boards;
           },
         ),
-        ChangeNotifierProxyProvider<TokenMember, Organizations>(
-          create: (context) => Organizations(context.read<TokenMember>()),
-          update: (context, tokenMember, organizations) {
-            organizations = organizations ?? Organizations(tokenMember);
+        ChangeNotifierProxyProvider2<Auth, TokenMember, Organizations>(
+          create: (context) =>
+              Organizations(context.read<TokenMember>(), context.read<Auth>()),
+          update: (context, auth, tokenMember, organizations) {
+            organizations = organizations ?? Organizations(tokenMember, auth);
             organizations.update();
             return organizations;
+          },
+        ),
+        ChangeNotifierProxyProvider2<Auth, Boards, TrelloLists>(
+          create: (context) =>
+              TrelloLists(context.read<Auth>(), context.read<Boards>()),
+          update: (context, auth, boards, trelloLists) {
+            trelloLists = trelloLists ?? TrelloLists(auth, boards);
+            trelloLists.update();
+            return trelloLists;
           },
         ),
       ],
