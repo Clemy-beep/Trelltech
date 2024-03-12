@@ -1,51 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CheckboxExample extends StatefulWidget {
-  final String name;
-  final Function(bool) onStateChanged;
-
-  const CheckboxExample({
+class CustomCheckbox extends Checkbox {
+  const CustomCheckbox({
     super.key,
-    required this.name,
-    required this.onStateChanged,
-  });
-
-  @override
-  State<CheckboxExample> createState() => _CheckboxExampleState();
-}
-
-class _CheckboxExampleState extends State<CheckboxExample> {
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return const Color(0xfffcc52e);
-      }
-      return const Color.fromARGB(255, 255, 255, 255);
-    }
-
-    return Checkbox(
-      checkColor: const Color.fromARGB(255, 0, 0, 0),
-      fillColor: MaterialStateProperty.resolveWith(getColor),
-      value: isChecked,
-      onChanged: (bool? value) {
-        setState(() {
-          isChecked = value!;
-          // Notify the parent about the state change
-          widget.onStateChanged(isChecked);
-        });
-      },
-      side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(
-            color: Color(0xfffcc52e),
-            width: 2,
-          )),
-    );
-  }
+    required bool super.value,
+    required super.onChanged,
+    super.autofocus = false,
+  }) : super(
+    activeColor: const Color(0xfffcda5e),
+    focusColor: const Color(0xfffcda5e),
+    hoverColor: const Color(0xfffcda5e),
+    tristate: false,
+    side: const BorderSide(
+      color: Color(0xfffcda5e),
+      width: 2.0,
+      style: BorderStyle.solid,
+    )
+  );
 }

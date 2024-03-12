@@ -5,7 +5,7 @@ class CustomIconEdit extends IconButton {
     super.key,
     required VoidCallback super.onPressed,
   }) : super(
-          icon: const Icon(Icons.draw),
+          icon: const Icon(Icons.draw_outlined),
           color: const Color(0xfffcda5e),
         );
 }

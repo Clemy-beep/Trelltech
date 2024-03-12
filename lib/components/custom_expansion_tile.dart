@@ -18,12 +18,14 @@ class CustomExpansionTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16.0),
       child: Card(
+        surfaceTintColor: const Color(0xFFFFF5D2),
         color: const Color(0xFFFFF5D2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
         borderOnForeground: false,
         child: ExpansionTile(
+          backgroundColor: const Color(0xFFFFF5D2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
             side: const BorderSide(

@@ -8,8 +8,8 @@ class CustomButton extends TextButton {
     required VoidCallback super.onPressed,
   }) : super(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.amberAccent),
-        padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
+        backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(253, 218, 95, 1)),
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 16, vertical: 20)),
         shape: MaterialStateProperty.all(const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16)),
         )),
@@ -17,7 +17,7 @@ class CustomButton extends TextButton {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(iconName, size: 20, color: Colors.black),
+          Icon(iconName, size: 20, color: Color.fromRGBO(20, 25, 70, 1),),
           const SizedBox(width: 8),
           Text(text.toLowerCase(),
               style: const TextStyle(

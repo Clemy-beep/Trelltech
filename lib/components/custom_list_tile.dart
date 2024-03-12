@@ -5,10 +5,12 @@ class CustomListTile extends StatelessWidget {
     super.key,
     required this.cardTitle,
     required this.memberAvatar,
+    required this.onTap,
   });
 
   final String cardTitle;
   final String memberAvatar;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,12 @@ class CustomListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: ListTile(
+          onTap: () {
+            onTap();
+          },
+          tileColor: const Color(0xffffe5a1),
           contentPadding: const EdgeInsets.all(16.0),
+          style: ListTileStyle.list,
           title: Text(
             cardTitle,
             style: const TextStyle(

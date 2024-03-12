@@ -5,7 +5,7 @@ class CustomIconDelete extends IconButton {
     super.key,
     required VoidCallback super.onPressed,
   }) : super(
-          icon: const Icon(Icons.delete_forever_sharp),
+          icon: const Icon(Icons.delete_outline_rounded),
           color: const Color.fromARGB(255, 180, 39, 0),
         );
 }
