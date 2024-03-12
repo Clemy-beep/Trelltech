@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:trelltech/arbory/services/user_info_service.dart';
 import 'package:trelltech/components/custom_appbar.dart';
@@ -27,7 +28,9 @@ class OrgsAndBoardsListScreens extends StatelessWidget{
                 CustomButton(
                     text: 'create workspace',
                     iconName: Icons.add,
-                    onPressed: (){}
+                    onPressed: (){
+                      context.go('/create-workspace');
+                    }
                 ),
                 const CustomTitle(text: 'Boards'),
                 const BoardsList(),
