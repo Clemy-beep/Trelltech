@@ -79,7 +79,10 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   createOrganization(
-      String displayName, String? desc, String? name, Uri? website) async {
+      {required String displayName,
+      String? desc,
+      String? name,
+      Uri? website}) async {
     if (_auth.apiToken == null) {
       return;
     }
