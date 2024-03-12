@@ -9,6 +9,7 @@ import 'package:trelltech/components/custom_card.dart';
 import 'package:trelltech/components/custom_list_tile.dart';
 import 'package:trelltech/components/custom_expansion_tile.dart';
 import 'package:trelltech/components/delete_text_button.dart';
+import 'package:trelltech/components/edit_text_button.dart';
 
 class OrgsAndBoardsListScreens extends StatelessWidget {
   // Constructs a [OrgsAndBoardsListScreens]
@@ -53,8 +54,8 @@ class OrgsAndBoardsListScreens extends StatelessWidget {
                   children: [
                     CustomListTile(cardTitle: '"qff', memberAvatar: '')
                   ]),
-              CustomIconButton(onPressed: () => {print('delete')}),
-              CustomIconButton(onPressed: () => {print('edit')}),
+              CustomIconDelete(onPressed: () => {print('delete')}),
+              CustomIconEdit(onPressed: () => {print('edit')}),
             ],
           ),
         ),
