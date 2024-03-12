@@ -15,6 +15,7 @@ class BoardsList extends StatelessWidget {
         return ListView.builder(
           itemCount: boards.boards.length,
           shrinkWrap: true,
+          primary: false,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             return CustomCard(

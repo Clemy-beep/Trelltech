@@ -6,6 +6,7 @@ class CustomAppBar extends AppBar {
   CustomAppBar({Key? key})
       : super(
     key: key,
+    leading: const Image(image: AssetImage('assets/images/logo.png')),
     title: Consumer<TokenMember>(
       builder: (context, tokenMember, child) {
         return Container(
