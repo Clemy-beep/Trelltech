@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:trelltech/arbory/services/organization_service.dart';
 import 'package:trelltech/components/custom_card.dart';
@@ -23,7 +24,9 @@ class OrganizationsList extends StatelessWidget {
               iconData: Icons.workspaces_outlined,
               title: organizations.organizations[index].displayName,
               subtitle: '${organizations.organizations[index].idBoards.length} boards',
-              onTap: () => {},
+              onTap: () => {
+                context.goNamed('org', pathParameters: {'orgId': organizations.organizations[index].id})
+              },
             );
           },
         );

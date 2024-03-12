@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trelltech/arbory/services/user_info_service.dart';
 
 class CustomAppBar extends AppBar {
-  CustomAppBar({Key? key})
+  CustomAppBar({super.key})
       : super(
-    key: key,
+    backgroundColor: Colors.white,
     leading: const Image(image: AssetImage('assets/images/logo.png')),
     title: Consumer<TokenMember>(
       builder: (context, tokenMember, child) {

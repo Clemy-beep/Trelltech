@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trelltech/views/create_workspace_screen.dart';
+import 'package:trelltech/views/organization.dart';
 import 'package:trelltech/views/orgs_and_boards_lists_screen.dart';
 
 import 'debug_screen.dart';
@@ -28,11 +30,24 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
-            path: 'home',
-            builder: (BuildContext context, GoRouterState state) {
-              return const OrgsAndBoardsListScreens();
-              },
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) {
+            return const OrgsAndBoardsListScreens();
+          },
         ),
+        GoRoute(
+          path: 'create-workspace',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CreateWorkspaceScreen();
+          },
+        ),
+        GoRoute(
+          name: 'org',
+          path: 'org/:orgId',
+          builder: (BuildContext context, GoRouterState state) {
+            return Organization(orgId: state.pathParameters['orgId']);
+          },
+        )
       ],
     ),
   ],

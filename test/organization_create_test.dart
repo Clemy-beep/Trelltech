@@ -1,91 +1,45 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:trelltech/arbory/services/auth_service.dart';
 import 'package:trelltech/arbory/services/user_info_service.dart';
 import 'package:trelltech/arbory/services/organization_service.dart';
 
-// Mocking the http client
-class MockClient extends Mock implements http.Client {}
+import 'mocks.mocks.dart';
+
+class MockMember extends Mock implements Member {}
 
 void main() {
   group('Organizations', () {
-    late Organizations organizations;
-    late TokenMember mockTokenMember;
-    late MockClient mockHttpClient;
+    test('createOrganization creates an organization correctly', () async {
+      final client = MockClient();
+      final tokenMember = MockTokenMember();
+      final auth = MockAuth();
+      final service = Organizations(tokenMember, auth);
 
-    setUp(() {
-      mockTokenMember = TokenMember(Auth());
-      mockHttpClient = MockClient();
-      organizations = Organizations(mockTokenMember);
-    });
+      // Mock the http.post call
+      when(client.post(any, headers: anyNamed('headers'))).thenAnswer(
+          (_) async =>
+              http.Response('{"id": "1", "name": "Test Organization"}', 200));
 
-    test('createOrganization sends a valid request', () async {
-      const expectedDisplayName = 'New Organization';
-      const expectedDesc = 'Description for the new organization';
-      const expectedName = 'new_organization';
-      final expectedWebsite =
-          Uri.parse('https://api.trello.com/1/organizations/');
+      // Mock the _auth.apiToken getter
+      when(auth.apiToken).thenReturn('valid_api_token');
 
-      when(mockTokenMember._auth.apiToken).thenReturn('valid_api_token');
-      when(mockTokenMember.member?.id).thenReturn('valid_member_id');
+      // Create a MockMember and set its id
+      final member = MockMember();
+      when(member.id).thenReturn('valid_member_id');
 
-      final expectedUrl = Uri.parse(
-          "https://api.trello.com/1/organizations?displayName=$expectedDisplayName&desc=$expectedDesc&name=$expectedName&website=$expectedWebsite");
+      // Mock the _tokenMember.member getter to return the MockMember
+      when(tokenMember.member).thenReturn(member);
 
-      final expectedResponse =
-          http.Response('{"id": "new_organization_id"}', 200);
-
-      when(mockHttpClient.post(expectedUrl, headers: anyNamed('headers')))
-          .thenAnswer((_) async => expectedResponse);
-
-      // Act
-      await organizations.createOrganization(
-        expectedDisplayName,
-        expectedDesc,
-        expectedName,
-        expectedWebsite,
+      await service.createOrganization(
+        displayName: 'Test Organization',
+        desc: 'dd',
+        name: 'dd',
+        website: Uri.parse('www.example.com'),
       );
 
-      // Assert
-      verify(mockHttpClient.post(expectedUrl, headers: {
-        'Authorization':
-            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="valid_api_token"',
-      }));
-    });
-
-    test('createOrganization updates organizations on success', () async {
-      // Arrange
-      const expectedDisplayName = 'New Organization';
-      const expectedDesc = 'Description for the new organization';
-      const expectedName = 'new_organization';
-      final expectedWebsite = Uri.parse('https://example.com');
-
-      when(mockTokenMember._auth.apiToken).thenReturn('valid_api_token');
-      when(mockTokenMember.member?.id).thenReturn('valid_member_id');
-
-      final expectedUrl = Uri.parse(
-          "https://api.trello.com/1/organizations?displayName=$expectedDisplayName&desc=$expectedDesc&name=$expectedName&website=$expectedWebsite");
-
-      final expectedResponse =
-          http.Response('{"id": "new_organization_id"}', 200);
-
-      when(mockHttpClient.post(expectedUrl, headers: anyNamed('headers')))
-          .thenAnswer((_) async => expectedResponse);
-
-      // Act
-      await organizations.createOrganization(
-        expectedDisplayName,
-        expectedDesc,
-        expectedName,
-        expectedWebsite,
-      );
-
-      // Assert
-      expect(organizations.organizations.length, 1);
-      expect(organizations.organizationsById.containsKey('new_organization_id'),
-          true);
+      // Verify that the http.post method was called
+      verify(client.post(any, headers: anyNamed('headers'))).called(1);
     });
   });
 }

@@ -122,7 +122,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
   String? domainName;
   List<String> idBoards;
   String? idEnterprise;
-  String idMemberCreator;
+  String? idMemberCreator;
   bool invited;
   List<String> invitations;
   int membersCount;
@@ -139,7 +139,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     this.domainName,
     required this.idBoards,
     this.idEnterprise,
-    required this.idMemberCreator,
+    this.idMemberCreator,
     required this.invited,
     required this.invitations,
     required this.membersCount,
@@ -157,16 +157,16 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     return Organization(
       id: json['id'],
       name: json['name'],
-      credits: List<String>.from(json['credits']),
+      credits: List<String>.from(json['credits'] ?? []),
       displayName: json['displayName'],
       desc: json['desc'],
       domainName: json['domainName'],
-      idBoards: List<String>.from(json['idBoards']),
+      idBoards: List<String>.from(json['idBoards'] ?? []),
       idEnterprise: json['idEnterprise'],
       idMemberCreator: json['idMemberCreator'],
-      invited: json['invited'],
-      invitations: List<String>.from(json['invitations']),
-      membersCount: json['membersCount'],
+      invited: json['invited'] ?? false,
+      invitations: List<String>.from(json['invitations'] ?? []),
+      membersCount: json['membersCount'] ?? 0,
       url: Uri.parse(json['url']),
       logoUrl: json['logoUrl'] != null ? Uri.parse(json['logoUrl']) : null,
       memberships: [],
