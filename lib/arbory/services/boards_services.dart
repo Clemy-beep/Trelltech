@@ -33,6 +33,9 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
     if (_auth.apiToken == null) {
       return;
     }
+    if (_tokenMember.member == null) {
+      return;
+    }
 
     final response = await http.get(
         Uri.parse(

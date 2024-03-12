@@ -4,6 +4,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'services/auth_service.dart';
 import 'services/boards_services.dart';
+import 'services/list_service.dart';
 import 'services/organization_service.dart';
 import 'services/user_info_service.dart';
 
@@ -17,106 +18,144 @@ class DebugScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Screen')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                context.read<Auth>().signUp().then((webWiew) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Scaffold(
-                              appBar: AppBar(
-                                  title: const Text('TrailTech Sign-up')),
-                              body: WebViewWidget(controller: webWiew))));
-                });
-              },
-              child: const Text('sign-up'),
-            ),
-            //text to show apitoken
-            Consumer<Auth>(
-              builder: (context, auth, child) {
-                return Text(auth.apiToken ?? 'no token');
-              },
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Wrap(
-                  spacing: 16,
-                  crossAxisAlignment: WrapCrossAlignment.start,
-                  children: [
-                    // user info
-                    Consumer<TokenMember>(
-                      builder: (context, tokenMember, child) {
-                        return Column(
-                          children: [
-                            Text(tokenMember.member?.fullName ?? 'no user'),
-                            for (var board
-                                in tokenMember.member?.idBoards ?? [])
-                              Text(board),
-                          ],
-                        );
-                      },
-                    ),
-                    //boards
-                    Consumer<Boards>(
-                      builder: (context, boards, child) {
-                        return Column(
-                          children: [
-                            Text('${boards.boards.length} boards'),
-                            for (var board in boards.boards) Text(board.name),
-                          ],
-                        );
-                      },
-                    ),
-                    Consumer<Organizations>(
-                      builder: (context, organizations, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                '${organizations.organizations.length} organizations'),
-                            //organizations name and boards name
-                            for (var organization
-                                in organizations.organizations)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(organization.name),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16),
-                                    child: Consumer<Boards>(
-                                      builder: (context, boards, child) {
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            for (var board in boards
-                                                        .boardsByOrganizationId[
-                                                    organization.id] ??
-                                                [])
-                                              Text(board.name),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  context.read<Auth>().signUp().then((webWiew) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                                appBar: AppBar(
+                                    title: const Text('TrailTech Sign-up')),
+                                body: WebViewWidget(controller: webWiew))));
+                  });
+                },
+                child: const Text('sign-up'),
+              ),
+              //text to show apitoken
+              Consumer<Auth>(
+                builder: (context, auth, child) {
+                  return Text(auth.apiToken ?? 'no token');
+                },
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      // user info
+                      Consumer<TokenMember>(
+                        builder: (context, tokenMember, child) {
+                          return Text(
+                              tokenMember.member?.fullName ?? 'no user');
+                        },
+                      ),
+                      //boards
+                      Consumer<Boards>(
+                        builder: (context, boards, child) {
+                          return Text('${boards.boards.length} boards');
+                        },
+                      ),
+                      const DebugScreenOrganizations(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class DebugScreenOrganizations extends StatelessWidget {
+  const DebugScreenOrganizations({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Organizations>(
+      builder: (context, organizations, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${organizations.organizations.length} organizations'),
+            //organizations name and boards name
+            for (var organization in organizations.organizations)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(organization.name),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    //passing organization id to DebugScreenOrganizationsBoards
+                    child: DebugScreenOrganizationsBoards(
+                        organizationId: organization.id),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class DebugScreenOrganizationsBoards extends StatelessWidget {
+  final String organizationId;
+
+  const DebugScreenOrganizationsBoards(
+      {super.key, required this.organizationId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Boards>(
+      builder: (context, boards, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var board
+                in boards.boardsByOrganizationId[organizationId] ?? [])
+              Column(
+                children: [
+                  Text(board.name),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    //passing board id to DebugScreenBoardsLists
+                    child: DebugScreenBoardsLists(boardId: board.id),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class DebugScreenBoardsLists extends StatelessWidget {
+  final String boardId;
+
+  const DebugScreenBoardsLists({super.key, required this.boardId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TrelloLists>(
+      builder: (context, trelloLists, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var list in trelloLists.listsByBoardId[boardId] ?? [])
+              Text(list.name),
+          ],
+        );
+      },
     );
   }
 }
