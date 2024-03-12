@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trelltech/arbory/services/user_info_service.dart';
+import 'package:trelltech/components/CustomAppBar.dart';
 import 'package:trelltech/components/business-components/boards_list.dart';
 import 'package:trelltech/components/business-components/orgs_list.dart';
 import 'package:trelltech/components/custom_bottom_navigation_bar.dart';
@@ -14,25 +15,7 @@ class OrgsAndBoardsListScreens extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Consumer<TokenMember>(
-          builder: (context, tokenMember, child) {
-            return Container(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'welcome ${tokenMember.member?.fullName ?? 'no user'} !',
-                  textAlign: TextAlign.end,
-                  textWidthBasis: TextWidthBasis.longestLine,
-                  style: const TextStyle(
-                    fontFamily: 'LexendExa',
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                )
-            );
-          },
-        ),
-      ),
+      appBar: CustomAppBar(),
       body: SingleChildScrollView(
           padding: const EdgeInsets.only(top: 16, bottom: 24),
           child: Column(

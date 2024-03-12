@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trelltech/arbory/services/auth_service.dart';
 
 class CustomNavigationBar extends StatelessWidget {
@@ -25,7 +26,7 @@ class CustomNavigationBar extends StatelessWidget {
               children: [
                 IconButton(
                     onPressed: () => {
-                      print('Home')
+                      context.go('/home'),
                     },
                     icon: const Icon(
                       Icons.cottage_outlined,
@@ -39,6 +40,16 @@ class CustomNavigationBar extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.account_circle_outlined,
+                      color: Color.fromRGBO(20, 25, 70, 1),
+                      size: 26,
+                    )
+                ),
+                IconButton(
+                    onPressed: () => {
+                      context.go('/debug'),
+                    },
+                    icon: const Icon(
+                      Icons.bug_report_outlined,
                       color: Color.fromRGBO(20, 25, 70, 1),
                       size: 26,
                     )
