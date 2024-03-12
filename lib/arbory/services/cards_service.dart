@@ -1,0 +1,337 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+import 'auth_service.dart';
+import 'boards_services.dart';
+
+class Cards with ChangeNotifier, DiagnosticableTreeMixin {
+  final Auth _auth;
+  final Boards _boards;
+
+  List<Card> cards = [];
+  Map<String, Card> cardsById = {};
+  Map<String, List<Card>> cardsByListId = {};
+  Map<String, List<Card>> cardsByBoardId = {};
+
+  Cards(this._auth, this._boards) {
+    update();
+  }
+
+  update() async {
+    if (_auth.apiToken == null) {
+      return;
+    }
+    // var requests = <Future>[];
+    for (var board in _boards.boards) {
+      // requests.add(
+      await http.get(
+          Uri.parse("https://api.trello.com/1/boards/${board.id}/cards"),
+          headers: {
+            'Authorization':
+                'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+          }).then(
+        (response) {
+          if (response.statusCode >= 400) {
+            log(response.body);
+            throw Exception(response.body);
+          }
+
+          final responseJson = jsonDecode(response.body) as List<dynamic>;
+
+          //check if need update, create, delete
+          for (var card in responseJson) {
+            log(responseJson.toString());
+            final index = cardsById.keys.toList().indexOf(card['id']);
+            if (index == -1) {
+              Card tmpCard = Card.fromJson(card);
+              cards.add(tmpCard);
+              cardsById[card['id']] = tmpCard;
+              if (cardsByBoardId[board.id] == null) {
+                cardsByBoardId[board.id] = [tmpCard];
+              } else {
+                //place in list by pos
+                int pos = tmpCard.pos;
+                List<Card> tmpCardList = cardsByBoardId[board.id]!;
+                for (int i = 0; i < tmpCardList.length; i++) {
+                  if (pos < tmpCardList[i].pos) {
+                    tmpCardList.insert(i, tmpCard);
+                    break;
+                  }
+                }
+                //if not inserted, add to end
+                if (!tmpCardList.contains(tmpCard)) {
+                  tmpCardList.add(tmpCard);
+                }
+              }
+              if (cardsByListId[card['idList']] == null) {
+                cardsByListId[card['idList']] = [tmpCard];
+              } else {
+                //place in list by pos
+                int pos = tmpCard.pos;
+                List<Card> tmpCardList = cardsByListId[card['idList']]!;
+                for (int i = 0; i < tmpCardList.length; i++) {
+                  if (pos < tmpCardList[i].pos) {
+                    tmpCardList.insert(i, tmpCard);
+                    break;
+                  }
+                }
+                //if not inserted, add to end
+                if (!tmpCardList.contains(tmpCard)) {
+                  tmpCardList.add(tmpCard);
+                }
+              }
+            } else {
+              //update board if needed
+              if (cardsById[card['id']]?.idBoard != card['idBoard']) {
+                cardsByBoardId[board.id]!.remove(cardsById[card['id']]);
+                cardsByBoardId[card['idBoard']]!.add(cardsById[card['id']]!);
+              }
+              //update list if needed
+              if (cardsById[card['id']]!.idList != card['idList']) {
+                cardsByListId[cardsById[card['id']]!.idList]!
+                    .remove(cardsById[card['id']]!);
+                cardsByListId[card['idList']]!.add(cardsById[card['id']]!);
+              }
+              cardsById[card['id']]!.updateData(card);
+            }
+          }
+        },
+        // ),
+      );
+    }
+    // await Future.wait(requests);
+    notifyListeners();
+  }
+}
+
+class Card {
+  final String id;
+
+  // List<Badge> badges;
+  // List<dynamic> checkItemStates;
+  bool closed;
+  bool dueComplete;
+  String dateLastActivity;
+  String? desc;
+  String? descData;
+  String? due;
+  int? dueReminder;
+  String? email;
+  String idBoard;
+  List<String>? idCheckLists;
+  String idList;
+  List<String>? idMembers;
+  List<String> idMembersVoted;
+  int idShort;
+  String? idAttachmentCover;
+  // List<Labels> labels;
+  List<String> idLabels;
+  bool manualCoverAttachment;
+  String name;
+  int pos;
+  String shortLink;
+  Uri? shortUrl;
+  String? start;
+  bool subscribed;
+  Uri? url;
+  // Cover? cover;
+  bool isTemplate;
+  String? cardRole;
+
+  Card({
+    required this.id,
+    // required this.badges,
+    // required this.checkItemStates,
+    required this.closed,
+    required this.dueComplete,
+    required this.dateLastActivity,
+    this.desc,
+    this.descData,
+    this.due,
+    this.dueReminder,
+    this.email,
+    required this.idBoard,
+    this.idCheckLists,
+    required this.idList,
+    this.idMembers,
+    required this.idMembersVoted,
+    required this.idShort,
+    this.idAttachmentCover,
+    // required this.labels,
+    required this.idLabels,
+    required this.manualCoverAttachment,
+    required this.name,
+    required this.pos,
+    required this.shortLink,
+    this.shortUrl,
+    this.start,
+    required this.subscribed,
+    this.url,
+    // this.cover,
+    required this.isTemplate,
+    this.cardRole,
+  });
+
+  updateData(Map<String, dynamic> json) {
+    bool update = false;
+
+    // if (badges != json['badges']) {
+    //   badges = json['badges'];
+    //   update = true;
+    // }
+    // if (checkItemStates != json['checkItemStates']) {
+    //   checkItemStates = json['checkItemStates'];
+    //   update = true;
+    // }
+    if (closed != json['closed']) {
+      closed = json['closed'];
+      update = true;
+    }
+    if (dueComplete != json['dueComplete']) {
+      dueComplete = json['dueComplete'];
+      update = true;
+    }
+    if (dateLastActivity != json['dateLastActivity']) {
+      dateLastActivity = json['dateLastActivity'];
+      update = true;
+    }
+    if (desc != json['desc']) {
+      desc = json['desc'];
+      update = true;
+    }
+    if (descData != json['descData']) {
+      descData = json['descData'];
+      update = true;
+    }
+    if (due != json['due']) {
+      due = json['due'];
+      update = true;
+    }
+    if (dueReminder != json['dueReminder']) {
+      dueReminder = json['dueReminder'];
+      update = true;
+    }
+    if (email != json['email']) {
+      email = json['email'];
+      update = true;
+    }
+    if (idBoard != json['idBoard']) {
+      idBoard = json['idBoard'];
+      update = true;
+    }
+    if (idCheckLists != json['idCheckLists']) {
+      idCheckLists = json['idCheckLists'];
+      update = true;
+    }
+    if (idList != json['idList']) {
+      idList = json['idList'];
+      update = true;
+    }
+    if (idMembers != json['idMembers']) {
+      idMembers = json['idMembers'];
+      update = true;
+    }
+    if (idMembersVoted != json['idMembersVoted']) {
+      idMembersVoted = json['idMembersVoted'];
+      update = true;
+    }
+    if (idShort != json['idShort']) {
+      idShort = json['idShort'];
+      update = true;
+    }
+    if (idAttachmentCover != json['idAttachmentCover']) {
+      idAttachmentCover = json['idAttachmentCover'];
+      update = true;
+    }
+
+    //!TODO labels not implemented
+
+    if (idLabels != json['idLabels']) {
+      idLabels = json['idLabels'];
+      update = true;
+    }
+    if (manualCoverAttachment != json['manualCoverAttachment']) {
+      manualCoverAttachment = json['manualCoverAttachment'];
+      update = true;
+    }
+    if (name != json['name']) {
+      name = json['name'];
+      update = true;
+    }
+    if (pos != json['pos']) {
+      pos = json['pos'];
+      update = true;
+    }
+    if (shortLink != json['shortLink']) {
+      shortLink = json['shortLink'];
+      update = true;
+    }
+    if (shortUrl != json['shortUrl']) {
+      shortUrl = json['shortUrl'];
+      update = true;
+    }
+    if (start != json['start']) {
+      start = json['start'];
+      update = true;
+    }
+    if (subscribed != json['subscribed']) {
+      subscribed = json['subscribed'];
+      update = true;
+    }
+    if (url != json['url']) {
+      url = json['url'];
+      update = true;
+    }
+
+    //!TODO cover not implemented
+
+    if (isTemplate != json['isTemplate']) {
+      isTemplate = json['isTemplate'];
+      update = true;
+    }
+    if (cardRole != json['cardRole']) {
+      cardRole = json['cardRole'];
+      update = true;
+    }
+  }
+
+  factory Card.fromJson(Map<String, dynamic> json) {
+    log("pls");
+    log(json.toString());
+    return Card(
+      id: json['id'],
+      // badges: json['badges'],
+      // checkItemStates: json['checkItemStates'],
+      closed: json['closed'],
+      dueComplete: json['dueComplete'],
+      dateLastActivity: json['dateLastActivity'],
+      desc: json['desc'],
+      descData: json['descData'],
+      due: json['due'],
+      dueReminder: json['dueReminder'],
+      email: json['email'],
+      idBoard: json['idBoard'],
+      idCheckLists: json['idCheckLists'],
+      idList: json['idList'],
+      // idMembers: json['idMembers'],
+      idMembers: [],
+      idMembersVoted: json['idMembersVoted'],
+      idShort: json['idShort'],
+      idAttachmentCover: json['idAttachmentCover'],
+      idLabels: json['idLabels'],
+      manualCoverAttachment: json['manualCoverAttachment'],
+      name: json['name'],
+      pos: json['pos'],
+      shortLink: json['shortLink'],
+      shortUrl: json['shortUrl'],
+      start: json['start'],
+      subscribed: json['subscribed'],
+      url: json['url'],
+      isTemplate: json['isTemplate'],
+      cardRole: json['cardRole'],
+    );
+  }
+}

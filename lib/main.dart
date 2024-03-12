@@ -8,10 +8,11 @@ import 'package:provider/provider.dart';
 import 'arbory/_router.dart';
 
 import 'arbory/services/auth_service.dart';
+import 'arbory/services/cards_service.dart';
 import 'arbory/services/user_info_service.dart';
 import 'arbory/services/boards_services.dart';
 import 'arbory/services/organization_service.dart';
-import 'arbory/services/list_service.dart';
+import 'arbory/services/lists_service.dart';
 
 /// The main entry point for the application.
 void main() {
@@ -52,6 +53,15 @@ void main() {
             trelloLists = trelloLists ?? TrelloLists(auth, boards);
             trelloLists.update();
             return trelloLists;
+          },
+        ),
+        ChangeNotifierProxyProvider2<Auth, Boards, Cards>(
+          create: (context) =>
+              Cards(context.read<Auth>(), context.read<Boards>()),
+          update: (context, auth, boards, cards) {
+            cards = cards ?? Cards(auth, boards);
+            cards.update();
+            return cards;
           },
         ),
       ],

@@ -4,8 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:trelltech/arbory/services/auth_service.dart';
-
+import 'auth_service.dart';
 import 'boards_services.dart';
 
 class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
@@ -55,9 +54,6 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
             if (listsByBoardId[board.id] == null) {
               listsByBoardId[board.id] = [tmpList];
             } else {
-              log("fuuu 1");
-              log(board.id);
-              log(listsByBoardId[board.id]!.toString());
               //place in list by pos from other list
               int pos = tmpList.pos;
               List<TrelloList> tmpListList = listsByBoardId[board.id]!;

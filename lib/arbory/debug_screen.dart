@@ -4,7 +4,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'services/auth_service.dart';
 import 'services/boards_services.dart';
-import 'services/list_service.dart';
+import 'services/cards_service.dart';
+import 'services/lists_service.dart';
 import 'services/organization_service.dart';
 import 'services/user_info_service.dart';
 
@@ -152,7 +153,36 @@ class DebugScreenBoardsLists extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var list in trelloLists.listsByBoardId[boardId] ?? [])
-              Text(list.name),
+              Column(
+                children: [
+                  Text(list.name),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    //passing list id to DebugScreenListsCards
+                    child: DebugScreenListsCards(listId: list.id),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class DebugScreenListsCards extends StatelessWidget {
+  final String listId;
+
+  const DebugScreenListsCards({super.key, required this.listId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Cards>(
+      builder: (context, cards, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var card in cards.cardsByListId[listId] ?? []) Text(card.name),
           ],
         );
       },
