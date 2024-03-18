@@ -184,7 +184,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     );
   }
 
-  update(
+  update({
     String? name,
     String? displayName,
     String? desc,
@@ -197,7 +197,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     String? prefsBoardVisibilityRestrictPublic,
     String? prefsOrgInviteRestrict,
     String? prefsPermissionLevel,
-  ) async {
+  }) async {
     if (_auth.apiToken == null) {
       return;
     }
@@ -205,9 +205,34 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     if (_tokenMember.member?.id == null) {
       return;
     }
+
+    Map<String, String> queryParameters = {
+      if (name != null) 'name': name,
+      if (displayName != null) 'displayName': displayName,
+      if (desc != null) 'desc': desc,
+      if (website != null) 'website': website.toString(),
+      if (prefsAssociatedDomain != null)
+        'prefs/associatedDomain': prefsAssociatedDomain,
+      if (prefsExternalMembersDisabled != null)
+        'prefs/externalMembersDisabled': prefsExternalMembersDisabled,
+      if (prefsGoogleAppsVersion != null)
+        'prefs/googleAppsVersion': prefsGoogleAppsVersion,
+      if (prefsBoardVisibilityRestrictOrg != null)
+        'prefs/boardVisibilityRestrict/org': prefsBoardVisibilityRestrictOrg,
+      if (prefsBoardVisibilityRestrictPrivate != null)
+        'prefs/boardVisibilityRestrict/private':
+            prefsBoardVisibilityRestrictPrivate,
+      if (prefsBoardVisibilityRestrictPublic != null)
+        'prefs/boardVisibilityRestrict/public':
+            prefsBoardVisibilityRestrictPublic,
+      if (prefsOrgInviteRestrict != null)
+        'prefs/orgInviteRestrict': prefsOrgInviteRestrict,
+      if (prefsPermissionLevel != null)
+        'prefs/permissionLevel': prefsPermissionLevel,
+    };
+
     final response = await http.post(
-      Uri.parse(
-          "https://api.trello.com/1/organizations/${id}?name=$name&displayName=$displayName&desc=$desc&website=$website&prefs/associatedDomain=$prefsAssociatedDomain&prefs/externalMembersDisabled=$prefsExternalMembersDisabled&prefs/googleAppsVersion=$prefsGoogleAppsVersion&prefs/boardVisibilityRestrict/org=$prefsBoardVisibilityRestrictOrg&prefs/boardVisibilityRestrict/private=$prefsBoardVisibilityRestrictPrivate&prefs/boardVisibilityRestrict/public=$prefsBoardVisibilityRestrictPublic&prefs/orgInviteRestrict=$prefsOrgInviteRestrict&prefs/permissionLevel=$prefsPermissionLevel"),
+      Uri.https('api.trello.com', '/1/organizations/${id}', queryParameters),
       headers: {
         'Authorization':
             'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',

@@ -72,7 +72,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   _updateData(dynamic board) {
     final index = boardsById.keys.toList().indexOf(board['id']);
     if (index == -1) {
-      Board tmpBoard = Board.fromJson(board);
+      Board tmpBoard = Board.fromJson(board, _auth);
       boards.add(tmpBoard);
       boardsById[board['id']] = tmpBoard;
       if (boardsByOrganizationId[board['idOrganization']] == null) {
@@ -81,7 +81,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
         boardsByOrganizationId[board['idOrganization']]!.add(tmpBoard);
       }
     } else {
-      boards[index].update(board);
+      boards[index]._updateJson(board);
     }
   }
 
@@ -143,6 +143,8 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 }
 
 class Board with ChangeNotifier, DiagnosticableTreeMixin {
+  final Auth _auth;
+
   final String id;
   String name;
   String desc;
@@ -154,7 +156,8 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   Uri shortUrl;
   Map labelNames;
 
-  Board({
+  Board(
+    this._auth, {
     required this.id,
     required this.name,
     required this.desc,
@@ -167,8 +170,9 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     required this.labelNames,
   });
 
-  factory Board.fromJson(Map<String, dynamic> json) {
+  factory Board.fromJson(Map<String, dynamic> json, Auth auth) {
     return Board(
+      auth,
       id: json['id'],
       name: json['name'],
       desc: json['desc'],
@@ -197,7 +201,93 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     properties.add(DiagnosticsProperty('labelNames', labelNames));
   }
 
-  update(Map<String, dynamic> json) {
+  update({
+    String? name,
+    String? desc,
+    bool? closed,
+    String? subscribed,
+    String? idOrganization,
+    String? prefsPermissionLevel,
+    String? prefsSelfJoin,
+    String? prefsCardCovers,
+    String? prefsHideVotes,
+    String? prefsInvitations,
+    String? prefsVoting,
+    String? prefsComments,
+    String? prefsBackground,
+    String? prefsCardAging,
+    String? prefsCalendarFeedEnabled,
+    String? labelNamesGreen,
+    String? labelNamesYellow,
+    String? labelNamesOrange,
+    String? labelNamesRed,
+    String? labelNamesPurple,
+    String? labelNamesBlue,
+  }) async {
+    Map<String, String> queryParameters = {
+      if (name != null) 'name': name,
+      if (desc != null) 'desc': desc,
+      if (closed != null) 'closed': closed.toString(),
+      if (subscribed != null) 'subscribed': subscribed,
+      if (idOrganization != null) 'idOrganization': idOrganization,
+      if (prefsPermissionLevel != null)
+        'prefs_permissionLevel': prefsPermissionLevel,
+      if (prefsSelfJoin != null) 'prefs_selfJoin': prefsSelfJoin,
+      if (prefsCardCovers != null) 'prefs_cardCovers': prefsCardCovers,
+      if (prefsHideVotes != null) 'prefs_hideVotes': prefsHideVotes,
+      if (prefsInvitations != null) 'prefs_invitations': prefsInvitations,
+      if (prefsVoting != null) 'prefs_voting': prefsVoting,
+      if (prefsComments != null) 'prefs_comments': prefsComments,
+      if (prefsBackground != null) 'prefs_background': prefsBackground,
+      if (prefsCardAging != null) 'prefs_cardAging': prefsCardAging,
+      if (prefsCalendarFeedEnabled != null)
+        'prefs_calendarFeedEnabled': prefsCalendarFeedEnabled,
+      if (labelNamesGreen != null) 'labelNames/green': labelNamesGreen,
+      if (labelNamesYellow != null) 'labelNames/yellow': labelNamesYellow,
+      if (labelNamesOrange != null) 'labelNames/orange': labelNamesOrange,
+      if (labelNamesRed != null) 'labelNames/red': labelNamesRed,
+      if (labelNamesPurple != null) 'labelNames/purple': labelNamesPurple,
+      if (labelNamesBlue != null) 'labelNames/blue': labelNamesBlue,
+    };
+
+    final response = await http.put(
+      Uri.https('api.trello.com', '/1/boards/$id', queryParameters),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body);
+    log(responseJson.toString());
+    _update();
+  }
+
+  _update() async {
+    final response = await http.get(
+      Uri.parse('https://api.trello.com/1/boards/$id'),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body);
+    log(responseJson.toString());
+    _updateJson(responseJson);
+  }
+
+  _updateJson(Map<String, dynamic> json) {
     //check if need update. if need (update and notify)
     bool update = false;
 
