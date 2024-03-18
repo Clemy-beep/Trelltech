@@ -294,7 +294,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     if (json['credits'] != credits) {
-      credits = List<String>.from(json['credits']);
+      credits = json['credits'].cast<String>();
       update = true;
     }
 
@@ -314,7 +314,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     if (json['idBoards'] != idBoards) {
-      idBoards = List<String>.from(json['idBoards']);
+      idBoards = json['idBoards'].cast<String>();
       update = true;
     }
 
@@ -334,7 +334,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     if (json['invitations'] != invitations) {
-      invitations = List<String>.from(json['invitations']);
+      invitations = json['invitations'].cast<String>();
       update = true;
     }
 
