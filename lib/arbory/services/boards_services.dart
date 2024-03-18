@@ -120,7 +120,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
       if (defaultLabels != null) 'defaultLabels': defaultLabels,
       if (defaultLists != null) 'defaultLists': defaultLists,
       if (desc != null) 'desc': desc,
-      if (idOrganization != null) 'idBoardSource': idOrganization,
+      if (idOrganization != null) 'idOrganization': idOrganization,
       if (idBoardSource != null) 'idBoardSource': idBoardSource,
       if (keepFromSource != null) 'keepFromSource': keepFromSource,
       if (powerUps != null) 'powerUps': powerUps,
