@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final String name;
   final Function(String) onTextChanged;
+  final String? helperText;
 
   const CustomTextField({
     super.key,
     required this.name,
     required this.onTextChanged,
+    this.helperText,
   });
 
   @override
@@ -40,6 +42,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             controller: _textController,
             onChanged: widget.onTextChanged,
             decoration: InputDecoration(
+              hintText: widget.helperText,
               contentPadding: const EdgeInsets.all(16.0),
               filled: true,
               fillColor: const Color(0xffffe4a1),

@@ -6,7 +6,8 @@ class CustomIconDelete extends IconButton {
     required VoidCallback super.onPressed,
   }) : super(
           icon: const Icon(Icons.delete_outline_rounded),
-          color: const Color.fromARGB(255, 180, 39, 0),
+          iconSize: 30,
+          color: const Color.fromARGB(255, 213, 48, 3),
         );
 }
 

@@ -16,6 +16,8 @@ class CustomTitle extends StatelessWidget {
           Text(
             text,
             textAlign: TextAlign.left,
+            softWrap: true,
+            maxLines: 3,
             style: TextStyle(
               fontFamily: 'BungeeShade',
               fontSize: 26,
@@ -28,6 +30,7 @@ class CustomTitle extends StatelessWidget {
           Text(
             text,
             textAlign: TextAlign.left,
+            softWrap: true,
             style: const TextStyle(
               fontFamily: 'BungeeShade',
               fontSize: 26,
