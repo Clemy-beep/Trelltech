@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trelltech/views/board_screen.dart';
+import 'package:trelltech/views/create_board_screen.dart';
 import 'package:trelltech/views/create_workspace_screen.dart';
-import 'package:trelltech/views/organization.dart';
+import 'package:trelltech/views/edit_organization_screen.dart';
+import 'package:trelltech/views/organization_screen.dart';
 import 'package:trelltech/views/orgs_and_boards_lists_screen.dart';
 
 import 'debug_screen.dart';
@@ -45,7 +48,25 @@ final GoRouter router = GoRouter(
           name: 'org',
           path: 'org/:orgId',
           builder: (BuildContext context, GoRouterState state) {
-            return Organization(orgId: state.pathParameters['orgId']);
+            return OrganizationScreen(orgId: state.pathParameters['orgId']);
+          },
+        ),
+        GoRoute(
+          path: 'create-board',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CreateBoardScreen();
+          },
+        ),
+        GoRoute(
+          path: 'board/:boardId',
+          builder: (BuildContext context, GoRouterState state) {
+            return BoardScreen(boardId: state.pathParameters['boardId']);
+          },
+        ),
+        GoRoute(
+          path: 'edit-organization/:orgId',
+          builder: (BuildContext context, GoRouterState state) {
+            return EditOrganizationScreen(orgId: state.pathParameters['orgId']);
           },
         )
       ],
