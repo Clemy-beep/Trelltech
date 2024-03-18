@@ -30,7 +30,7 @@ void main() {
         ),
         ChangeNotifierProxyProvider<TokenMember, Boards>(
           create: (context) =>
-              Boards(context.watch<TokenMember>(), context.watch<Auth>()),
+              Boards(context.read<TokenMember>(), context.read<Auth>()),
           update: (context, tokenMember, boards) {
             boards = boards ?? Boards(tokenMember, context.read<Auth>());
             boards.update();
@@ -38,8 +38,8 @@ void main() {
           },
         ),
         ChangeNotifierProxyProvider3<Auth, TokenMember, Boards, Organizations>(
-          create: (context) => Organizations(context.watch<TokenMember>(),
-              context.watch<Auth>(), context.read<Boards>()),
+          create: (context) => Organizations(context.read<TokenMember>(),
+              context.read<Auth>(), context.read<Boards>()),
           update: (context, auth, tokenMember, boards, organizations) {
             organizations =
                 organizations ?? Organizations(tokenMember, auth, boards);
@@ -49,7 +49,7 @@ void main() {
         ),
         ChangeNotifierProxyProvider2<Auth, Boards, TrelloLists>(
           create: (context) =>
-              TrelloLists(context.watch<Auth>(), context.read<Boards>()),
+              TrelloLists(context.read<Auth>(), context.read<Boards>()),
           update: (context, auth, boards, trelloLists) {
             trelloLists = trelloLists ?? TrelloLists(auth, boards);
             trelloLists.update();
@@ -58,7 +58,7 @@ void main() {
         ),
         ChangeNotifierProxyProvider2<Auth, Boards, Cards>(
           create: (context) =>
-              Cards(context.watch<Auth>(), context.read<Boards>()),
+              Cards(context.read<Auth>(), context.read<Boards>()),
           update: (context, auth, boards, cards) {
             cards = cards ?? Cards(auth, boards);
             cards.update();
