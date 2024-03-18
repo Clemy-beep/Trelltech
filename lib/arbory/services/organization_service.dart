@@ -240,7 +240,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
         'prefs/permissionLevel': prefsPermissionLevel,
     };
 
-    final response = await http.post(
+    final response = await http.put(
       Uri.https('api.trello.com', '/1/organizations/$id', queryParameters),
       headers: {
         'Authorization':
