@@ -282,6 +282,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
 
     _updateJson(responseJson);
     notifyListeners();
+    organizations.update();
   }
 
   _updateJson(Map<String, dynamic> json) {
@@ -356,7 +357,6 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
 
     if (update) {
       notifyListeners();
-      organizations.update();
     }
   }
 
