@@ -85,7 +85,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   _updateData(dynamic board) {
     final index = boardsById.keys.toList().indexOf(board['id']);
     if (index == -1) {
-      Board tmpBoard = Board.fromJson(board, _auth);
+      Board tmpBoard = Board.fromJson(board, _auth, this);
       boards.add(tmpBoard);
       boardsById[board['id']] = tmpBoard;
       if (boardsByOrganizationId[board['idOrganization']] == null) {
@@ -219,6 +219,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 
 class Board with ChangeNotifier, DiagnosticableTreeMixin {
   final Auth _auth;
+  final Boards boards;
 
   final String id;
   String name;
@@ -233,7 +234,8 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   List<Member> memberships = [];
 
   Board(
-    this._auth, {
+    this._auth,
+    this.boards, {
     required this.id,
     required this.name,
     required this.desc,
@@ -247,9 +249,10 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     required this.memberships,
   });
 
-  factory Board.fromJson(Map<String, dynamic> json, Auth auth) {
+  factory Board.fromJson(Map<String, dynamic> json, Auth auth, Boards boards) {
     return Board(
       auth,
+      boards,
       id: json['id'],
       name: json['name'],
       desc: json['desc'],
@@ -433,6 +436,10 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
 
     final responseJson = jsonDecode(response.body);
     log(responseJson.toString());
+
+    notifyListeners();
+
+    boards.update();
   }
 }
 

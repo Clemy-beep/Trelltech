@@ -241,7 +241,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     };
 
     final response = await http.post(
-      Uri.https('api.trello.com', '/1/organizations/${id}', queryParameters),
+      Uri.https('api.trello.com', '/1/organizations/$id', queryParameters),
       headers: {
         'Authorization':
             'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
@@ -267,12 +267,11 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       return;
     }
 
-    final response = await http.get(
-        Uri.parse("https://api.trello.com/1/organizations/${id}"),
-        headers: {
-          'Authorization':
-              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
-        });
+    final response = await http
+        .get(Uri.parse("https://api.trello.com/1/organizations/$id"), headers: {
+      'Authorization':
+          'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+    });
 
     if (response.statusCode >= 400) {
       log(response.body);
@@ -368,7 +367,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       return;
     }
     final response = await http.delete(
-      Uri.parse("https://api.trello.com/1/organizations/${id}"),
+      Uri.parse("https://api.trello.com/1/organizations/$id"),
       headers: {
         'Authorization':
             'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
