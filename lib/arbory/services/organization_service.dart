@@ -293,7 +293,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       update = true;
     }
 
-    if (json['credits'] != credits) {
+    if (json['credit'] != null && json['credits'] != credits) {
       credits = json['credits'].cast<String>();
       update = true;
     }
@@ -308,37 +308,38 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
       update = true;
     }
 
-    if (json['domainName'] != domainName) {
+    if (json['domainName'] != null && json['domainName'] != domainName) {
       domainName = json['domainName'];
       update = true;
     }
 
-    if (json['idBoards'] != idBoards) {
+    if (json['idBoards'] != null && json['idBoards'] != idBoards) {
       idBoards = json['idBoards'].cast<String>();
       update = true;
     }
 
-    if (json['idEnterprise'] != idEnterprise) {
+    if (json['idEnterprise'] != null && json['idEnterprise'] != idEnterprise) {
       idEnterprise = json['idEnterprise'];
       update = true;
     }
 
-    if (json['idMemberCreator'] != idMemberCreator) {
+    if (json['idMemberCreator'] != null &&
+        json['idMemberCreator'] != idMemberCreator) {
       idMemberCreator = json['idMemberCreator'];
       update = true;
     }
 
-    if (json['invited'] != invited) {
+    if (json['invited'] != null && json['invited'] != invited) {
       invited = json['invited'];
       update = true;
     }
 
-    if (json['invitations'] != invitations) {
+    if (json['invitations'] != null && json['invitations'] != invitations) {
       invitations = json['invitations'].cast<String>();
       update = true;
     }
 
-    if (json['membersCount'] != membersCount) {
+    if (json['membersCount'] != null && json['membersCount'] != membersCount) {
       membersCount = json['membersCount'];
       update = true;
     }
