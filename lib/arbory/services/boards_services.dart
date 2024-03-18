@@ -41,6 +41,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
       return;
     }
 
+    log("hey");
     final response = await http.get(
         Uri.parse(
             "https://api.trello.com/1/members/${_tokenMember.member!.id}/boards"),
@@ -62,19 +63,22 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     //for board that not in responseJson and user is member of board
-    for (var board in boards) {
-      if (!responseJson.any((element) =>
-          element['id'] == board.id &&
+    List<Board> listCopy = List.from(boards);
+    for (var board in listCopy) {
+      if (!responseJson.any((element) => element['id'] == board.id) &&
           board.memberships
-              .any((member) => member.idMember == _tokenMember.member!.id))) {
+              .any((member) => member.idMember == _tokenMember.member!.id)) {
+        log("update : remove board : ${board.name}");
         boards.remove(board);
         boardsById.remove(board.id);
         boardsByOrganizationId.remove(board.idOrganization);
       }
     }
 
+    log("END hey");
     await _updateOrganizationBoards();
 
+    log("NOTIFY : boards");
     notifyListeners();
   }
 
@@ -151,6 +155,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void addOrganizationIds(List<String> newOrganizationIds) {
+    log("addOrganizationIds : $newOrganizationIds");
     bool updated = false;
     for (var id in newOrganizationIds) {
       if (!organizationIds.contains(id)) {
@@ -164,6 +169,14 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   Future<void> _updateOrganizationBoards() async {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    if (_tokenMember.member == null) {
+      return;
+    }
+    log("hey2");
     for (var id in organizationIds) {
       final response = await http.get(
           Uri.parse("https://api.trello.com/1/organizations/$id/boards"),
@@ -186,13 +199,13 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 
       if (boardsByOrganizationId[id] != null) {
         //for board that not in responseJson and user is not member of board
-        var boardsCopy = List.from(boardsByOrganizationId[id]!);
-        for (var board in boardsCopy) {
+        List<Board> listCopy = List.from(boardsByOrganizationId[id]!);
+        for (var board in listCopy) {
           //check if board is not in responseJson and if user is not member of board :  delete board
-          if (!responseJson.any((element) =>
-              element['id'] == board.id &&
+          if (!responseJson.any((element) => element['id'] == board.id) &&
               !board.memberships.any(
-                  (member) => member.idMember == _tokenMember.member!.id))) {
+                  (member) => member.idMember == _tokenMember.member!.id)) {
+            log("_updateOrganizationBoards : remove board : ${board.name}");
             boards.remove(board);
             boardsById.remove(board.id);
             boardsByOrganizationId[id]!.remove(board);
@@ -200,6 +213,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
         }
       }
     }
+    log("END hey2");
   }
 }
 
