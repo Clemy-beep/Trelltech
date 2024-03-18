@@ -12,6 +12,9 @@ import 'auth_service.dart';
 class Boards with ChangeNotifier, DiagnosticableTreeMixin {
   final Auth _auth;
   final TokenMember _tokenMember;
+
+  List<String> organizationIds = []; //list of organization id to get boards
+
   List<Board> boards = [];
   Map<String, Board> boardsById = {};
   Map<String, List<Board>> boardsByOrganizationId = {};
@@ -31,6 +34,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 
   update() async {
     if (_auth.apiToken == null) {
+      organizationIds = [];
       return;
     }
     if (_tokenMember.member == null) {
@@ -57,14 +61,19 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
       _updateData(board);
     }
 
-    //for board that not in responseJson
+    //for board that not in responseJson and user is member of board
     for (var board in boards) {
-      if (!responseJson.any((element) => element['id'] == board.id)) {
+      if (!responseJson.any((element) =>
+          element['id'] == board.id &&
+          board.memberships
+              .any((member) => member.idMember == _tokenMember.member!.id))) {
         boards.remove(board);
         boardsById.remove(board.id);
         boardsByOrganizationId.remove(board.idOrganization);
       }
     }
+
+    _updateOrganizationBoards();
 
     notifyListeners();
   }
@@ -140,6 +149,55 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
     _updateData(responseJson);
     notifyListeners();
   }
+
+  void addOrganizationIds(List<String> newOrganizationIds) {
+    bool updated = false;
+    for (var id in newOrganizationIds) {
+      if (!organizationIds.contains(id)) {
+        organizationIds.add(id);
+        updated = true;
+      }
+    }
+    if (updated) {
+      update();
+    }
+  }
+
+  void _updateOrganizationBoards() async {
+    for (var id in organizationIds) {
+      final response = await http.get(
+          Uri.parse("https://api.trello.com/1/organizations/$id/boards"),
+          headers: {
+            'Authorization':
+                'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+          });
+
+      if (response.statusCode >= 400) {
+        log(response.body);
+        throw Exception(response.body);
+      }
+
+      final responseJson = jsonDecode(response.body) as List<dynamic>;
+
+      //check if need update, create, delete
+      for (var board in responseJson) {
+        _updateData(board);
+      }
+
+      //for board that not in responseJson and user is not member of board
+      for (var board in boardsByOrganizationId[id]!) {
+        //check if board is not in responseJson and if user is not member of board :  delete board
+        if (!responseJson.any((element) =>
+            element['id'] == board.id &&
+            !board.memberships
+                .any((member) => member.idMember == _tokenMember.member!.id))) {
+          boards.remove(board);
+          boardsById.remove(board.id);
+          boardsByOrganizationId[id]!.remove(board);
+        }
+      }
+    }
+  }
 }
 
 class Board with ChangeNotifier, DiagnosticableTreeMixin {
@@ -155,6 +213,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   Uri url;
   Uri shortUrl;
   Map labelNames;
+  List<Member> memberships = [];
 
   Board(
     this._auth, {
@@ -168,6 +227,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     required this.url,
     required this.shortUrl,
     required this.labelNames,
+    required this.memberships,
   });
 
   factory Board.fromJson(Map<String, dynamic> json, Auth auth) {
@@ -183,6 +243,9 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
       url: Uri.parse(json['url']),
       shortUrl: Uri.parse(json['shortUrl']),
       labelNames: json['labelNames'],
+      memberships: (json['memberships'] as List<dynamic>)
+          .map((memberJson) => Member.fromJson(memberJson))
+          .toList(),
     );
   }
 
@@ -353,5 +416,31 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
 
     final responseJson = jsonDecode(response.body);
     log(responseJson.toString());
+  }
+}
+
+class Member {
+  final String idMember;
+  final String memberType;
+  final bool unconfirmed;
+  final bool deactivated;
+  final String id;
+
+  Member({
+    required this.idMember,
+    required this.memberType,
+    required this.unconfirmed,
+    required this.deactivated,
+    required this.id,
+  });
+
+  factory Member.fromJson(Map<String, dynamic> json) {
+    return Member(
+      idMember: json['idMember'],
+      memberType: json['memberType'],
+      unconfirmed: json['unconfirmed'],
+      deactivated: json['deactivated'],
+      id: json['id'],
+    );
   }
 }

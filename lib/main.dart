@@ -30,25 +30,26 @@ void main() {
         ),
         ChangeNotifierProxyProvider<TokenMember, Boards>(
           create: (context) =>
-              Boards(context.read<TokenMember>(), context.read<Auth>()),
+              Boards(context.watch<TokenMember>(), context.watch<Auth>()),
           update: (context, tokenMember, boards) {
             boards = boards ?? Boards(tokenMember, context.read<Auth>());
             boards.update();
             return boards;
           },
         ),
-        ChangeNotifierProxyProvider2<Auth, TokenMember, Organizations>(
-          create: (context) =>
-              Organizations(context.read<TokenMember>(), context.read<Auth>()),
-          update: (context, auth, tokenMember, organizations) {
-            organizations = organizations ?? Organizations(tokenMember, auth);
+        ChangeNotifierProxyProvider3<Auth, TokenMember, Boards, Organizations>(
+          create: (context) => Organizations(context.watch<TokenMember>(),
+              context.watch<Auth>(), context.read<Boards>()),
+          update: (context, auth, tokenMember, boards, organizations) {
+            organizations =
+                organizations ?? Organizations(tokenMember, auth, boards);
             organizations.update();
             return organizations;
           },
         ),
         ChangeNotifierProxyProvider2<Auth, Boards, TrelloLists>(
           create: (context) =>
-              TrelloLists(context.read<Auth>(), context.read<Boards>()),
+              TrelloLists(context.watch<Auth>(), context.read<Boards>()),
           update: (context, auth, boards, trelloLists) {
             trelloLists = trelloLists ?? TrelloLists(auth, boards);
             trelloLists.update();
@@ -57,7 +58,7 @@ void main() {
         ),
         ChangeNotifierProxyProvider2<Auth, Boards, Cards>(
           create: (context) =>
-              Cards(context.read<Auth>(), context.read<Boards>()),
+              Cards(context.watch<Auth>(), context.read<Boards>()),
           update: (context, auth, boards, cards) {
             cards = cards ?? Cards(auth, boards);
             cards.update();

@@ -3,17 +3,21 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import 'boards_services.dart';
 import 'user_info_service.dart';
 import 'auth_service.dart';
 
 class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
   final TokenMember _tokenMember;
+  Boards _boards; //only for add organization id to boards provider
+
   final Auth _auth;
   List<Organization> organizations = [];
   Map<String, Organization> organizationsById = {};
 
-  Organizations(this._tokenMember, this._auth) {
+  Organizations(this._tokenMember, this._auth, this._boards) {
     update();
   }
 
@@ -34,6 +38,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
     if (_tokenMember.member?.id == null) {
       return;
     }
+
     final response = await http.get(
         Uri.parse(
             "https://api.trello.com/1/members/${_tokenMember.member!.id}/organizations"),
@@ -48,6 +53,10 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     final responseJson = jsonDecode(response.body) as List<dynamic>;
+
+    //add organization id to boards provider
+    _boards.addOrganizationIds(
+        responseJson.map((e) => e['id']).toList().cast<String>());
 
     //check if need update, create, delete
     for (var organization in responseJson) {
