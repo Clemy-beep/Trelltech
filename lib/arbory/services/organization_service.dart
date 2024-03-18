@@ -356,6 +356,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
 
     if (update) {
       notifyListeners();
+      organizations.update();
     }
   }
 
