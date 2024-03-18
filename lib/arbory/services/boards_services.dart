@@ -54,19 +54,7 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
 
     //check if need update, create, delete
     for (var board in responseJson) {
-      final index = boardsById.keys.toList().indexOf(board['id']);
-      if (index == -1) {
-        Board tmpBoard = Board.fromJson(board);
-        boards.add(tmpBoard);
-        boardsById[board['id']] = tmpBoard;
-        if (boardsByOrganizationId[board['idOrganization']] == null) {
-          boardsByOrganizationId[board['idOrganization']] = [tmpBoard];
-        } else {
-          boardsByOrganizationId[board['idOrganization']]!.add(tmpBoard);
-        }
-      } else {
-        boards[index].update(board);
-      }
+      _updateData(board);
     }
 
     //for board that not in responseJson
@@ -78,6 +66,78 @@ class Boards with ChangeNotifier, DiagnosticableTreeMixin {
       }
     }
 
+    notifyListeners();
+  }
+
+  _updateData(dynamic board) {
+    final index = boardsById.keys.toList().indexOf(board['id']);
+    if (index == -1) {
+      Board tmpBoard = Board.fromJson(board);
+      boards.add(tmpBoard);
+      boardsById[board['id']] = tmpBoard;
+      if (boardsByOrganizationId[board['idOrganization']] == null) {
+        boardsByOrganizationId[board['idOrganization']] = [tmpBoard];
+      } else {
+        boardsByOrganizationId[board['idOrganization']]!.add(tmpBoard);
+      }
+    } else {
+      boards[index].update(board);
+    }
+  }
+
+  createBoard(
+      {required String name,
+      String? defaultLabels,
+      String? defaultLists,
+      String? desc,
+      String? idOrganization,
+      String? idBoardSource,
+      String? keepFromSource,
+      String? powerUps,
+      String? prefsPermissionLevel,
+      String? prefsVoting,
+      String? prefsComments,
+      String? prefsInvitations,
+      String? prefsSelfJoin,
+      String? prefsCardCovers,
+      String? prefsBackground,
+      String? prefsCardAging}) async {
+    Map<String, String> queryParameters = {
+      'name': name,
+      if (defaultLabels != null) 'defaultLabels': defaultLabels,
+      if (defaultLists != null) 'defaultLists': defaultLists,
+      if (desc != null) 'desc': desc,
+      if (idOrganization != null) 'idBoardSource': idOrganization,
+      if (idBoardSource != null) 'idBoardSource': idBoardSource,
+      if (keepFromSource != null) 'keepFromSource': keepFromSource,
+      if (powerUps != null) 'powerUps': powerUps,
+      if (prefsPermissionLevel != null)
+        'prefs_permissionLevel': prefsPermissionLevel,
+      if (prefsVoting != null) 'prefs_voting': prefsVoting,
+      if (prefsComments != null) 'prefs_comments': prefsComments,
+      if (prefsInvitations != null) 'prefs_invitations': prefsInvitations,
+      if (prefsSelfJoin != null) 'prefs_selfJoin': prefsSelfJoin,
+      if (prefsCardCovers != null) 'prefs_cardCovers': prefsCardCovers,
+      if (prefsBackground != null) 'prefs_background': prefsBackground,
+      if (prefsCardAging != null) 'prefs_cardAging': prefsCardAging,
+    };
+
+    final response = await http.post(
+      Uri.https('api.trello.com', '/1/boards', queryParameters),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body);
+    log(responseJson.toString());
+    _updateData(responseJson);
     notifyListeners();
   }
 }

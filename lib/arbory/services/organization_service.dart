@@ -82,7 +82,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
       {required String displayName,
       String? desc,
       String? name,
-      Uri? website}) async {
+      String? website}) async {
     if (_auth.apiToken == null) {
       return;
     }
@@ -90,9 +90,16 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
     if (_tokenMember.member?.id == null) {
       return;
     }
+
+    Map<String, String> queryParameters = {
+      'displayName': displayName,
+      if (desc != null) 'desc': desc,
+      if (name != null) 'name': name,
+      if (website != null) 'website': website,
+    };
+
     final response = await http.post(
-      Uri.parse(
-          "https://api.trello.com/1/organizations?displayName=$displayName&desc=$desc&name=$name&website=$website"),
+      Uri.https('api.trello.com', '/1/organizations', queryParameters),
       headers: {
         'Authorization':
             'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
@@ -105,6 +112,7 @@ class Organizations with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+
     _updateData(responseJson);
     notifyListeners();
   }
