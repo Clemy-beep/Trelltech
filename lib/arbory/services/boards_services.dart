@@ -332,4 +332,26 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
       notifyListeners();
     }
   }
+
+  delete() async {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    final response = await http.delete(
+      Uri.https('api.trello.com', '/1/boards/$id'),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    final responseJson = jsonDecode(response.body);
+    log(responseJson.toString());
+  }
 }

@@ -245,6 +245,7 @@ class Organization with ChangeNotifier, DiagnosticableTreeMixin {
     }
 
     final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    log(responseJson.toString());
     _update();
   }
 
