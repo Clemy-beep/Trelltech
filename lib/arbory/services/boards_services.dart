@@ -225,7 +225,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   String name;
   String desc;
   bool closed;
-  String idOrganization;
+  String? idOrganization;
   String? idEnterprise;
   bool pinned;
   Uri url;
@@ -240,7 +240,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     required this.name,
     required this.desc,
     required this.closed,
-    required this.idOrganization,
+    this.idOrganization,
     this.idEnterprise,
     required this.pinned,
     required this.url,

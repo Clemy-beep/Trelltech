@@ -45,7 +45,9 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         final responseJson = jsonDecode(response.body) as List<dynamic>;
 
         //check if need update, create, delete
+        //show id fo each list
         for (var list in responseJson) {
+          log(list['id']);
           _updateData(list, board);
         }
 
@@ -66,9 +68,11 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   _updateData(Map<String, dynamic> list, Board board) {
-    log(list.toString());
+    log("BOARD : ${board.id}  : ${board.name}");
+    log("LIST : ${list['id']}  : ${list['name']}");
     final index = listsById.keys.toList().indexOf(list['id']);
     if (index == -1) {
+      log('create list');
       TrelloList tmpList = TrelloList.fromJson(list, _auth, this);
       lists.add(tmpList);
       listsById[list['id']] = tmpList;
@@ -91,8 +95,10 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         }
       }
     } else {
+      log('update list');
       //update position if needed
       if (listsById[list['id']]?.pos != list['pos']) {
+        log('update list position');
         listsByBoardId[board.id]!.remove(listsById[list['id']]);
         listsById[list['id']]!.updateData(list);
         int pos = list['pos'];
