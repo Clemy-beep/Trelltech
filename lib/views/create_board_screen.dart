@@ -34,7 +34,7 @@ class CreateBoardScreenState extends State<CreateBoardScreen> {
         .read<Boards>()
         .createBoard(
             idBoardSource: board, idOrganization: org, name: name, desc: desc)
-        .then(context.go('/home'));
+        .then((value) => context.go('/home'));
   }
 
   @override
