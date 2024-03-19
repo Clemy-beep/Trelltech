@@ -78,7 +78,7 @@ class OrganizationScreen extends StatelessWidget {
                         )
                     ),
                     Text(
-                      organization!.desc.isEmpty ? "No description found" : organization.desc,
+                      organization?.desc ?? "No description",
                       style: const TextStyle(
                         fontFamily: 'LexendExa',
                         color: Color.fromRGBO(20, 25, 70, 1),
@@ -101,7 +101,7 @@ class OrganizationScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 20),
                     Text(
-                      organization.membersCount.toString(),
+                      organization?.membersCount.toString() ?? "0",
                       style: const TextStyle(
                         fontFamily: "LexendExa",
                         color: Color.fromRGBO(20, 25, 70, 1),
@@ -139,7 +139,7 @@ class OrganizationScreen extends StatelessWidget {
                           title: boardsByOrg[index].name,
                           subtitle: boardsByOrg[index].desc == '' ? 'No description' : boardsByOrg[index].desc,
                           onTap: (){
-                            context.pushNamed('/board/${boardsByOrg[index].id}');
+                            context.go('/board/${boardsByOrg[index].id}');
                           },
                         );
                       },
