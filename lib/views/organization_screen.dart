@@ -32,7 +32,7 @@ class OrganizationScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 260,
+                        width: MediaQuery.of(context).size.width * 0.6,
                         child: CustomTitle(text: organization?.displayName ?? "No organization"),
                       ),
                       CustomIconEdit(onPressed: (){
