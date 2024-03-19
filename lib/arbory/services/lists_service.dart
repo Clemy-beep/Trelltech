@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import 'auth_service.dart';
 import 'boards_services.dart';
@@ -32,11 +31,12 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
     for (var board in _boards.boards) {
       log(_boards.boards[0].id);
       requests.add(http.get(
-          Uri.parse("https://api.trello.com/1/boards/${board.id}/lists"),
-          headers: {
-            'Authorization':
-                'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
-          }).then((response) {
+        Uri.parse("https://api.trello.com/1/boards/${board.id}/lists"),
+        headers: {
+          'Authorization':
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+        },
+      ).then((response) {
         if (response.statusCode >= 400) {
           log(response.body);
           throw Exception(response.body);
@@ -47,6 +47,15 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         //check if need update, create, delete
         for (var list in responseJson) {
           _updateData(list, board);
+        }
+
+        //delete list that are not in response
+        for (var list in lists) {
+          if (responseJson.indexWhere((element) => element['id'] == list.id) ==
+              -1) {
+            lists.remove(list);
+            listsById.remove(list.id);
+          }
         }
       }));
     }
