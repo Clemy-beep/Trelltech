@@ -28,11 +28,12 @@ class Cards with ChangeNotifier, DiagnosticableTreeMixin {
     for (var board in _boards.boards) {
       // requests.add(
       await http.get(
-          Uri.parse("https://api.trello.com/1/boards/${board.id}/cards"),
-          headers: {
-            'Authorization':
-                'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
-          }).then(
+        Uri.https("api.trello.com", "1/boards/${board.id}/cards"),
+        headers: {
+          'Authorization':
+              'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+        },
+      ).then(
         (response) {
           if (response.statusCode >= 400) {
             log(response.body);
@@ -44,71 +45,140 @@ class Cards with ChangeNotifier, DiagnosticableTreeMixin {
           //check if need update, create, delete
           for (var card in responseJson) {
             log(responseJson.toString());
-            final index = cardsById.keys.toList().indexOf(card['id']);
-            if (index == -1) {
-              Card tmpCard = Card.fromJson(card);
-              cards.add(tmpCard);
-              cardsById[card['id']] = tmpCard;
-              if (cardsByBoardId[board.id] == null) {
-                cardsByBoardId[board.id] = [tmpCard];
-              } else {
-                //place in list by pos
-                int pos = tmpCard.pos;
-                List<Card> tmpCardList = cardsByBoardId[board.id]!;
-                for (int i = 0; i < tmpCardList.length; i++) {
-                  if (pos < tmpCardList[i].pos) {
-                    tmpCardList.insert(i, tmpCard);
-                    break;
-                  }
-                }
-                //if not inserted, add to end
-                if (!tmpCardList.contains(tmpCard)) {
-                  tmpCardList.add(tmpCard);
-                }
-              }
-              if (cardsByListId[card['idList']] == null) {
-                cardsByListId[card['idList']] = [tmpCard];
-              } else {
-                //place in list by pos
-                int pos = tmpCard.pos;
-                List<Card> tmpCardList = cardsByListId[card['idList']]!;
-                for (int i = 0; i < tmpCardList.length; i++) {
-                  if (pos < tmpCardList[i].pos) {
-                    tmpCardList.insert(i, tmpCard);
-                    break;
-                  }
-                }
-                //if not inserted, add to end
-                if (!tmpCardList.contains(tmpCard)) {
-                  tmpCardList.add(tmpCard);
-                }
-              }
-            } else {
-              //update board if needed
-              if (cardsById[card['id']]?.idBoard != card['idBoard']) {
-                cardsByBoardId[board.id]!.remove(cardsById[card['id']]);
-                cardsByBoardId[card['idBoard']]!.add(cardsById[card['id']]!);
-              }
-              //update list if needed
-              if (cardsById[card['id']]!.idList != card['idList']) {
-                cardsByListId[cardsById[card['id']]!.idList]!
-                    .remove(cardsById[card['id']]!);
-                cardsByListId[card['idList']]!.add(cardsById[card['id']]!);
-              }
-              cardsById[card['id']]!.updateData(card);
-            }
+            _updateData(card, board);
           }
         },
-        // ),
       );
     }
     // await Future.wait(requests);
     notifyListeners();
   }
+
+  _updateData(Map<String, dynamic> card, Board board) {
+    final index = cardsById.keys.toList().indexOf(card['id']);
+    if (index == -1) {
+      Card tmpCard = Card.fromJson(card, _auth, this);
+      cards.add(tmpCard);
+      cardsById[card['id']] = tmpCard;
+      if (cardsByBoardId[board.id] == null) {
+        cardsByBoardId[board.id] = [tmpCard];
+      } else {
+        //place in list by pos
+        int pos = tmpCard.pos;
+        List<Card> tmpCardList = cardsByBoardId[board.id]!;
+        for (int i = 0; i < tmpCardList.length; i++) {
+          if (pos < tmpCardList[i].pos) {
+            tmpCardList.insert(i, tmpCard);
+            break;
+          }
+        }
+        //if not inserted, add to end
+        if (!tmpCardList.contains(tmpCard)) {
+          tmpCardList.add(tmpCard);
+        }
+      }
+      if (cardsByListId[card['idList']] == null) {
+        cardsByListId[card['idList']] = [tmpCard];
+      } else {
+        //place in list by pos
+        int pos = tmpCard.pos;
+        List<Card> tmpCardList = cardsByListId[card['idList']]!;
+        for (int i = 0; i < tmpCardList.length; i++) {
+          if (pos < tmpCardList[i].pos) {
+            tmpCardList.insert(i, tmpCard);
+            break;
+          }
+        }
+        //if not inserted, add to end
+        if (!tmpCardList.contains(tmpCard)) {
+          tmpCardList.add(tmpCard);
+        }
+      }
+    } else {
+      //update board if needed
+      if (cardsById[card['id']]?.idBoard != card['idBoard']) {
+        cardsByBoardId[board.id]!.remove(cardsById[card['id']]);
+        cardsByBoardId[card['idBoard']]!.add(cardsById[card['id']]!);
+      }
+      //update list if needed
+      if (cardsById[card['id']]!.idList != card['idList']) {
+        cardsByListId[cardsById[card['id']]!.idList]!
+            .remove(cardsById[card['id']]!);
+        cardsByListId[card['idList']]!.add(cardsById[card['id']]!);
+      }
+      cardsById[card['id']]!.updateData(card);
+    }
+  }
+
+  createCard({
+    required String idList,
+    String? name,
+    String? desc,
+    double? pos,
+    String? due,
+    String? start,
+    String? dueComplete,
+    String? idMembers,
+    String? idLabels,
+    String? urlSource,
+    String? fileSource,
+    String? mimeType,
+    String? idCardSource,
+    String? keepFromSource,
+    String? address,
+    String? locationName,
+    String? coordinates,
+  }) {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    Map<String, dynamic> queryParameters = {
+      'idList': idList,
+      'name': name,
+      'desc': desc,
+      'pos': pos,
+      'due': due,
+      'start': start,
+      'dueComplete': dueComplete,
+      'idMembers': idMembers,
+      'idLabels': idLabels,
+      'urlSource': urlSource,
+      'fileSource': fileSource,
+      'mimeType': mimeType,
+      'idCardSource': idCardSource,
+      'keepFromSource': keepFromSource,
+      'address': address,
+      'locationName': locationName,
+      'coordinates': coordinates,
+    };
+
+    http.post(
+      Uri.https("api.trello.com", "1/cards", queryParameters),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    ).then(
+      (response) {
+        if (response.statusCode >= 400) {
+          log(response.body);
+          throw Exception(response.body);
+        }
+
+        final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+        Card tmpCard = Card.fromJson(responseJson, _auth, this);
+        _updateData(responseJson, _boards.boardsById[tmpCard.idBoard]!);
+      },
+    );
+  }
 }
 
 class Card {
   final String id;
+  final Auth _auth;
+  final Cards _cards;
 
   // List<Badge> badges;
   // List<dynamic> checkItemStates;
@@ -173,7 +243,10 @@ class Card {
     // this.cover,
     required this.isTemplate,
     this.cardRole,
-  });
+    required Auth auth,
+    required Cards cards,
+  })  : _auth = auth,
+        _cards = cards;
 
   updateData(Map<String, dynamic> json) {
     bool update = false;
@@ -298,7 +371,7 @@ class Card {
     }
   }
 
-  factory Card.fromJson(Map<String, dynamic> json) {
+  factory Card.fromJson(Map<String, dynamic> json, Auth auth, Cards cards) {
     log("pls");
     log(json.toString());
     return Card(
@@ -332,6 +405,101 @@ class Card {
       url: Uri.parse(json['url'] ?? ""),
       isTemplate: json['isTemplate'],
       cardRole: json['cardRole'],
+      auth: auth,
+      cards: cards,
+    );
+  }
+
+  update({
+    String? name,
+    String? desc,
+    String? closed,
+    String? idMembers,
+    String? idAttachmentCover,
+    String? idList,
+    String? idLabels,
+    String? idBoard,
+    double? pos,
+    String? due,
+    String? start,
+    String? dueComplete,
+    String? subscribed,
+    String? address,
+    String? locationName,
+    String? coordinates,
+    String? cover,
+  }) {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    Map<String, dynamic> queryParameters = {
+      'name': name,
+      'desc': desc,
+      'closed': closed,
+      'idMembers': idMembers,
+      'idAttachmentCover': idAttachmentCover,
+      'idList': idList,
+      'idLabels': idLabels,
+      'idBoard': idBoard,
+      'pos': pos,
+      'due': due,
+      'start': start,
+      'dueComplete': dueComplete,
+      'subscribed': subscribed,
+      'address': address,
+      'locationName': locationName,
+      'coordinates': coordinates,
+      'cover': cover,
+    };
+
+    http.put(
+      Uri.https("api.trello.com", "1/cards/$id", queryParameters),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    ).then(
+      (response) {
+        if (response.statusCode >= 400) {
+          log(response.body);
+          throw Exception(response.body);
+        }
+
+        final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+        updateData(responseJson);
+
+        _cards.update();
+      },
+    );
+  }
+
+  delete() {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    http.delete(
+      Uri.https("api.trello.com", "1/cards/$id"),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    ).then(
+      (response) {
+        if (response.statusCode >= 400) {
+          log(response.body);
+          throw Exception(response.body);
+        }
+
+        _cards.cards.remove(this);
+        _cards.cardsById.remove(id);
+        _cards.cardsByListId[idList]!.remove(this);
+        _cards.cardsByBoardId[idBoard]!.remove(this);
+
+        _cards.update();
+      },
     );
   }
 }
