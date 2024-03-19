@@ -50,7 +50,8 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         }
 
         //delete list that are not in response
-        for (var list in lists) {
+        List<TrelloList> tmpList = List.from(lists);
+        for (var list in tmpList) {
           if (responseJson.indexWhere((element) => element['id'] == list.id) ==
               -1) {
             lists.remove(list);

@@ -263,8 +263,8 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
       url: Uri.parse(json['url']),
       shortUrl: Uri.parse(json['shortUrl']),
       labelNames: json['labelNames'],
-      memberships: (json['memberships'].cast<Map<String, dynamic>>() ?? [])
-          .map((memberJson) => Member.fromJson(memberJson))
+      memberships: ((json['memberships'] ?? []) as List<dynamic>)
+          .map((e) => Member.fromJson(e))
           .toList(),
     );
   }
