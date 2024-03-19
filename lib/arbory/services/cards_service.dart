@@ -64,7 +64,7 @@ class Cards with ChangeNotifier, DiagnosticableTreeMixin {
         cardsByBoardId[board.id] = [tmpCard];
       } else {
         //place in list by pos
-        int pos = tmpCard.pos;
+        double pos = tmpCard.pos;
         List<Card> tmpCardList = cardsByBoardId[board.id]!;
         for (int i = 0; i < tmpCardList.length; i++) {
           if (pos < tmpCardList[i].pos) {
@@ -81,7 +81,7 @@ class Cards with ChangeNotifier, DiagnosticableTreeMixin {
         cardsByListId[card['idList']] = [tmpCard];
       } else {
         //place in list by pos
-        int pos = tmpCard.pos;
+        double pos = tmpCard.pos;
         List<Card> tmpCardList = cardsByListId[card['idList']]!;
         for (int i = 0; i < tmpCardList.length; i++) {
           if (pos < tmpCardList[i].pos) {
@@ -201,7 +201,7 @@ class Card {
   List<String> idLabels;
   bool manualCoverAttachment;
   String name;
-  int pos;
+  double pos;
   String shortLink;
   Uri? shortUrl;
   String? start;
@@ -371,7 +371,7 @@ class Card {
     }
 
     if (update) {
-      _cards.update();
+      _cards.notifyListeners();
     }
   }
 
@@ -401,7 +401,7 @@ class Card {
       idLabels: json['idLabels'].cast<String>(),
       manualCoverAttachment: json['manualCoverAttachment'],
       name: json['name'],
-      pos: json['pos'],
+      pos: (json['pos'] ?? 0.0).toDouble(),
       shortLink: json['shortLink'],
       shortUrl: Uri.parse(json['shortUrl'] ?? ""),
       start: json['start'],

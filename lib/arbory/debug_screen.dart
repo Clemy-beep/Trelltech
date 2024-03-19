@@ -49,6 +49,8 @@ class DebugScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       // user info
                       Consumer<TokenMember>(
@@ -63,7 +65,10 @@ class DebugScreen extends StatelessWidget {
                           return Text('${boards.boards.length} boards');
                         },
                       ),
-                      const DebugScreenOrganizations(),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: DebugScreenOrganizations(),
+                      ),
                     ],
                   ),
                 ),
@@ -85,12 +90,14 @@ class DebugScreenOrganizations extends StatelessWidget {
       builder: (context, organizations, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text('${organizations.organizations.length} organizations'),
             //organizations name and boards name
             for (var organization in organizations.organizations)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(organization.name),
                   Padding(
@@ -120,10 +127,13 @@ class DebugScreenOrganizationsBoards extends StatelessWidget {
       builder: (context, boards, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             for (var board
                 in boards.boardsByOrganizationId[organizationId] ?? [])
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(board.name),
                   Padding(
@@ -151,9 +161,12 @@ class DebugScreenBoardsLists extends StatelessWidget {
       builder: (context, trelloLists, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             for (var list in trelloLists.listsByBoardId[boardId] ?? [])
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(list.name),
                   Padding(
