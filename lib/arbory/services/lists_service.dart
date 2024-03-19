@@ -281,4 +281,31 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
     _trelloLists.update();
   }
+
+  delete() async {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    var response = await http.delete(
+      Uri.https('api.trello.com', '/1/lists/$id'),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      log(response.body);
+      throw Exception(response.body);
+    }
+
+    _trelloLists.lists.remove(this);
+    _trelloLists.listsById.remove(id);
+    _trelloLists.listsByBoardId[idBoard]?.remove(this);
+
+    notifyListeners();
+
+    _trelloLists.update();
+  }
 }
