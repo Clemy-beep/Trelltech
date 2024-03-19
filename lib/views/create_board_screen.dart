@@ -29,7 +29,9 @@ class CreateBoardScreenState extends State<CreateBoardScreen> {
       String? name,
       String? desc) {
     if (board == null || org == null || name == null || desc == null) {
-      error = "Please fill in the form";
+      setState(() {
+        error = 'Please fill in the form';
+      });
       return;
     }
     context
@@ -115,15 +117,6 @@ class CreateBoardScreenState extends State<CreateBoardScreen> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
                           Colors.white,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            side: const BorderSide(
-                                width: 3,
-                                color: Color(0xfffcda5e)
-                            ),
-                          ),
                         ),
                         textStyle: MaterialStateProperty.all(
                           const TextStyle(
