@@ -32,12 +32,12 @@ class BoardScreen extends StatelessWidget {
                   Row(
                     children: [
                       SizedBox(
-                        width: 260,
+                        width: MediaQuery.of(context).size.width * 0.6,
                         child: CustomTitle(text: board?.name ?? "No board"),
                       ),
                       CustomIconEdit(onPressed: (){context.go('/edit-board/${board!.id}');}),
                       CustomIconDelete(onPressed: ()=>{
-                          showDialog(context: context, builder: (context){
+                        showDialog(context: context, builder: (context){
                           return AlertDialog(
                             title: const Text("Delete board"),
                             content: const Text("Are you sure you want to delete this board?"),
@@ -62,46 +62,43 @@ class BoardScreen extends StatelessWidget {
                       })
                     ],
                   ),
-                 Container(
-                   padding: const EdgeInsets.only(left: 16),
-                   child:  Badge(
-                     label: Text(board!.closed ? 'closed' : 'open',
-                       style: const TextStyle(
-                         color: Color.fromRGBO(20, 25, 70, 1),
-                         fontFamily: 'LexendExa',
-                         fontSize: 12,
-                       ),
-                     ),
-                     backgroundColor: board.closed ? Colors.red[100] : Colors.greenAccent[200],
-                   ),
-                 ),
-                  const SizedBox(height: 40),
-                  Row(
-                    children: [
-                      const Text(
-                        'descritpion : ',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: 'LexendExa',
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(20, 25, 70, 1),
-                        ),
-                      ),
-                      Text(
-                        board.desc.isEmpty ? 'no description' : board.desc,
-                        softWrap: true,
+                  Container(
+                    padding: const EdgeInsets.only(left: 16),
+                    child:  Badge(
+                      label: Text(board!.closed ? 'closed' : 'open',
                         style: const TextStyle(
-                          fontFamily: 'LexendExa',
                           color: Color.fromRGBO(20, 25, 70, 1),
+                          fontFamily: 'LexendExa',
+                          fontSize: 12,
                         ),
                       ),
-                    ],
+                      backgroundColor: board.closed ? Colors.red[100] : Colors.greenAccent[200],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    'descritpion : ',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'LexendExa',
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(20, 25, 70, 1),
+                    ),
+                  ),
+                  Text(
+                    board.desc.isEmpty ? 'no description' : board.desc,
+                    softWrap: true,
+                    style: const TextStyle(
+                      fontFamily: 'LexendExa',
+                      color: Color.fromRGBO(20, 25, 70, 1),
+                    ),
                   ),
                   const SizedBox(height: 40),
                   Consumer<Organizations>(
                     builder: (context, organizations, child) {
                       var organization = organizations.organizationsById[board.idOrganization];
-                      return Row(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'organization : ',
@@ -112,17 +109,13 @@ class BoardScreen extends StatelessWidget {
                               color: Color.fromRGBO(20, 25, 70, 1),
                             ),
                           ),
-                         Container(
-                            padding: const EdgeInsets.only(left: 16),
-                            width: 200,
-                            child: Text(
-                              organization?.displayName ?? "No organization",
-                              style: const TextStyle(
-                                fontFamily: 'LexendExa',
-                                color: Color.fromRGBO(20, 25, 70, 1),
-                              ),
+                          Text(
+                            organization?.displayName ?? "No organization",
+                            style: const TextStyle(
+                              fontFamily: 'LexendExa',
+                              color: Color.fromRGBO(20, 25, 70, 1),
                             ),
-                         ),
+                          ),
                         ],
                       );
                     },

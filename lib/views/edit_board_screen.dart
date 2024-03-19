@@ -33,7 +33,7 @@ class EditBoardScreenState extends State<EditBoardScreen>{
             orgId = board!.idOrganization;
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomTitle(text: 'Edit board ${board.name}'),
                 const SizedBox(height: 40),
@@ -114,29 +114,67 @@ class EditBoardScreenState extends State<EditBoardScreen>{
                   );
                 }),
                 const SizedBox(height: 40),
-                if(!board.closed) TextButton(
-                    onPressed: (){
-                  board.update(closed: true);
-                },
-                    style: ButtonStyle(
-                      textStyle: MaterialStateProperty.all(
-                          const TextStyle(
-                              fontFamily: 'LexendExa',
-                            color: Colors.black
-                          )
+                if(!board.closed) SizedBox(
+                  width: 200,
+                  child: TextButton(
+                      onPressed: (){
+                        board.update(closed: true);
+                        context.go('/board/${board.id}');
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.only(top: 16.0, bottom: 16.0)
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                            const TextStyle(
+                                fontFamily: 'LexendExa',
+                                color: Colors.black
+                            )
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.red[100]),
                       ),
-                      backgroundColor: MaterialStateProperty.all(Colors.red[100]),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.close, color: Colors.redAccent,),
-                        Text('close board', style: TextStyle(
-                            fontFamily: 'LexendExa',
-                          color: Colors.black
-                        ),)
-                      ],
-                    )),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.close, color: Colors.redAccent,),
+                          Text(' close board', style: TextStyle(
+                              fontFamily: 'LexendExa',
+                              color: Colors.black
+                          ),)
+                        ],
+                      )),
+                ),
+                if(board.closed) SizedBox(
+                  width: 200,
+                  child: TextButton(
+                      onPressed: (){
+                        board.update(closed: false);
+                        context.go('/board/${board.id}');
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.only(top: 16.0, bottom: 16.0)
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                            const TextStyle(
+                                fontFamily: 'LexendExa',
+                                color: Colors.black
+                            )
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.greenAccent[100]),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.open_in_browser, color: Colors.greenAccent,),
+                          Text(' open board', style: TextStyle(
+                              fontFamily: 'LexendExa',
+                              color: Colors.black
+                          ),)
+                        ],
+                      )),
+                ),
+                const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
