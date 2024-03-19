@@ -231,7 +231,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   Uri url;
   Uri shortUrl;
   Map labelNames;
-  List<Member> memberships = [];
+  List<Membership> memberships = [];
 
   Board(
     this._auth,
@@ -264,7 +264,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
       shortUrl: Uri.parse(json['shortUrl']),
       labelNames: json['labelNames'],
       memberships: ((json['memberships'] ?? []) as List<dynamic>)
-          .map((e) => Member.fromJson(e))
+          .map((e) => Membership.fromJson(e))
           .toList(),
     );
   }
@@ -449,14 +449,14 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
   }
 }
 
-class Member {
+class Membership {
   final String idMember;
   final String memberType;
   final bool unconfirmed;
   final bool deactivated;
   final String id;
 
-  Member({
+  Membership({
     required this.idMember,
     required this.memberType,
     required this.unconfirmed,
@@ -464,8 +464,8 @@ class Member {
     required this.id,
   });
 
-  factory Member.fromJson(Map<String, dynamic> json) {
-    return Member(
+  factory Membership.fromJson(Map<String, dynamic> json) {
+    return Membership(
       idMember: json['idMember'],
       memberType: json['memberType'],
       unconfirmed: json['unconfirmed'],

@@ -13,6 +13,7 @@ import 'arbory/services/user_info_service.dart';
 import 'arbory/services/boards_services.dart';
 import 'arbory/services/organization_service.dart';
 import 'arbory/services/lists_service.dart';
+import 'arbory/services/members_service.dart';
 
 /// The main entry point for the application.
 void main() {
@@ -63,6 +64,15 @@ void main() {
             cards = cards ?? Cards(auth, boards);
             cards.update();
             return cards;
+          },
+        ),
+        ChangeNotifierProxyProvider3<Auth, Organizations, Boards, Members>(
+          create: (context) => Members(context.read<Auth>(),
+              context.read<Organizations>(), context.read<Boards>()),
+          update: (context, auth, organizations, boards, members) {
+            members = members ?? Members(auth, organizations, boards);
+            members.update();
+            return members;
           },
         ),
       ],
