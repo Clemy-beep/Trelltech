@@ -506,4 +506,35 @@ class Card {
       },
     );
   }
+
+  addMember(String memberId) {
+    if (_auth.apiToken == null) {
+      return;
+    }
+
+    // {{protocol}}://{{host}}/{{basePath}}cards/:id/idMembers
+    http.post(
+      Uri.https("api.trello.com", "1/cards/$id/idMembers"),
+      headers: {
+        'Authorization':
+            'OAuth oauth_consumer_key="${Auth.apiKey}", oauth_token="${_auth.apiToken}"',
+      },
+      body: {
+        'value': memberId,
+      },
+    ).then(
+      (response) {
+        if (response.statusCode >= 400) {
+          log(response.body);
+          throw Exception(response.body);
+        }
+
+        final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+        updateData(responseJson);
+
+        _cards.update();
+      },
+    );
+  }
 }
