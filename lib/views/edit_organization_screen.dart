@@ -65,12 +65,22 @@ class EditOrganizationScreenState extends State<EditOrganizationScreen> {
                         text: 'Save',
                         onPressed: () {
                           if (newOrgName == null || newOrgDesc == null) {
-                            error = "Please fill in the form";
+                            setState(() {
+                              error = 'Please fill in the form';
+                            });
                             return;
                           }
                           if(newOrgName == organization!.displayName && newOrgDesc == organization.desc){
-                            error = "No changes made";
+                            setState(() {
+                              error = 'No changes made';
+                            });
                             return;
+                          }
+                          if(newOrgName == null && newOrgDesc != null && newOrgDesc != organization.desc){
+                            newOrgName = organization.displayName;
+                          }
+                          if(newOrgName != null && newOrgDesc == null && newOrgName != organization.displayName){
+                            newOrgDesc = organization.desc;
                           }
                           organization.update(
                               displayName: newOrgName,
