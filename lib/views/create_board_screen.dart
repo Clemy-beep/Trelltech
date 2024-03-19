@@ -41,7 +41,7 @@ class CreateBoardScreenState extends State<CreateBoardScreen> {
         idOrganization: org,
         name: name,
         desc: desc)
-        .then( context.go('/home'));
+        .then((value) => context.go('/home'));
   }
   @override
   Widget build(BuildContext context) {
