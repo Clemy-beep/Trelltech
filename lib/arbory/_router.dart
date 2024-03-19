@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trelltech/views/board_screen.dart';
 import 'package:trelltech/views/create_board_screen.dart';
 import 'package:trelltech/views/create_workspace_screen.dart';
+import 'package:trelltech/views/edit_board_screen.dart';
 import 'package:trelltech/views/edit_organization_screen.dart';
 import 'package:trelltech/views/organization_screen.dart';
 import 'package:trelltech/views/orgs_and_boards_lists_screen.dart';
@@ -66,7 +67,14 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'edit-organization/:orgId',
           builder: (BuildContext context, GoRouterState state) {
-            return EditOrganizationScreen(orgId: state.pathParameters['orgId']);
+            return EditOrganizationScreen(orgId: state.pathParameters['orgId']
+            );
+          },
+        ),
+        GoRoute(
+          path: 'edit-board/:boardId',
+          builder: (BuildContext context, GoRouterState state) {
+            return EditBoardScreen(boardId: state.pathParameters['boardId']!);
           },
         )
       ],
