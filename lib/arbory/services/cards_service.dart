@@ -417,7 +417,7 @@ class Card {
   update({
     String? name,
     String? desc,
-    String? closed,
+    bool? closed,
     String? idMembers,
     String? idAttachmentCover,
     String? idList,
@@ -440,7 +440,7 @@ class Card {
     Map<String, dynamic> queryParameters = {
       'name': name,
       'desc': desc,
-      'closed': closed,
+      'closed': closed.toString(),
       'idMembers': idMembers,
       'idAttachmentCover': idAttachmentCover,
       'idList': idList,
