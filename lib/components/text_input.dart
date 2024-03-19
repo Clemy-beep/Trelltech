@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final String name;
+  final String? errorText;
   final Function(String) onTextChanged;
   final String? helperText;
 
@@ -10,6 +11,7 @@ class CustomTextField extends StatefulWidget {
     required this.name,
     required this.onTextChanged,
     this.helperText,
+    this.errorText,
   });
 
   @override
@@ -39,11 +41,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
           margin: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           width: MediaQuery.of(context).size.width - 32.0,
           child: TextField(
+            style: const TextStyle(
+              fontFamily: 'LexendExa',
+            ),
             controller: _textController,
             onChanged: widget.onTextChanged,
             decoration: InputDecoration(
               hintText: widget.helperText,
               contentPadding: const EdgeInsets.all(16.0),
+              errorText: widget.errorText,
               filled: true,
               fillColor: const Color(0xffffe4a1),
               border: OutlineInputBorder(

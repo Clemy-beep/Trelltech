@@ -17,7 +17,7 @@ class CustomButton extends TextButton {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(iconName, size: 20, color: Color.fromRGBO(20, 25, 70, 1),),
+          Icon(iconName, size: 20, color: const Color.fromRGBO(20, 25, 70, 1),),
           const SizedBox(width: 8),
           Text(text.toLowerCase(),
               style: const TextStyle(

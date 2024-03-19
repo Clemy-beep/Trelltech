@@ -51,7 +51,7 @@ class CustomCard extends StatelessWidget {
             trailing: const Icon(
               Icons.remove_red_eye_outlined,
               color: Color(0xff141946),
-            )
+            ),
           ),
         )
       ),

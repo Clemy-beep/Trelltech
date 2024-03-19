@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomTitle extends StatelessWidget {
@@ -20,7 +19,7 @@ class CustomTitle extends StatelessWidget {
             maxLines: 3,
             style: TextStyle(
               fontFamily: 'BungeeShade',
-              fontSize: 26,
+              fontSize: 22,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = 3
@@ -33,7 +32,7 @@ class CustomTitle extends StatelessWidget {
             softWrap: true,
             style: const TextStyle(
               fontFamily: 'BungeeShade',
-              fontSize: 26,
+              fontSize: 22,
               color: Color.fromRGBO(20, 25, 70, 1),
             ),
           ),
