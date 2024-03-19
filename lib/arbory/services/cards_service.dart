@@ -170,6 +170,7 @@ class Cards with ChangeNotifier, DiagnosticableTreeMixin {
 
         Card tmpCard = Card.fromJson(responseJson, _auth, this);
         _updateData(responseJson, _boards.boardsById[tmpCard.idBoard]!);
+        notifyListeners();
       },
     );
   }
@@ -501,7 +502,7 @@ class Card {
         _cards.cardsById.remove(id);
         _cards.cardsByListId[idList]!.remove(this);
         _cards.cardsByBoardId[idBoard]!.remove(this);
-
+        _cards.notifyListeners();
         _cards.update();
       },
     );
@@ -529,9 +530,7 @@ class Card {
           throw Exception(response.body);
         }
 
-        final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
-
-        updateData(responseJson);
+        final responseJson = jsonDecode(response.body) as List<dynamic>;
 
         _cards.update();
       },

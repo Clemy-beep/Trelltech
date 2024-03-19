@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trelltech/views/board_screen.dart';
+import 'package:trelltech/views/card_screen.dart';
 import 'package:trelltech/views/create_board_screen.dart';
+import 'package:trelltech/views/create_card_screen.dart';
+import 'package:trelltech/views/create_list_screen.dart';
 import 'package:trelltech/views/create_workspace_screen.dart';
 import 'package:trelltech/views/edit_board_screen.dart';
+import 'package:trelltech/views/edit_card_screen.dart';
+import 'package:trelltech/views/edit_list_screen.dart';
 import 'package:trelltech/views/edit_organization_screen.dart';
+import 'package:trelltech/views/list_screen.dart';
 import 'package:trelltech/views/organization_screen.dart';
 import 'package:trelltech/views/orgs_and_boards_lists_screen.dart';
 
@@ -75,6 +81,42 @@ final GoRouter router = GoRouter(
           path: 'edit-board/:boardId',
           builder: (BuildContext context, GoRouterState state) {
             return EditBoardScreen(boardId: state.pathParameters['boardId']!);
+          },
+        ),
+        GoRoute(
+          path: 'list/:listId',
+          builder: (BuildContext context, GoRouterState state) {
+            return ListScreen(listId: state.pathParameters['listId']!);
+          },
+        ),
+        GoRoute(
+          path: 'create-list/:boardId',
+          builder: (BuildContext context, GoRouterState state) {
+            return CreateListScreen(boardId: state.pathParameters['boardId']!);
+          },
+        ),
+        GoRoute(
+          path: 'edit-list/:listId',
+          builder: (BuildContext context, GoRouterState state) {
+            return EditListScreen(listId: state.pathParameters['listId']!);
+          },
+        ),
+        GoRoute(
+          path: 'card/:cardId',
+          builder: (BuildContext context, GoRouterState state) {
+            return CardScreen(cardId: state.pathParameters['cardId']!);
+          },
+        ),
+        GoRoute(
+            path: 'create-card/:listId',
+            builder: (BuildContext context, GoRouterState state) {
+              return CreateCardScreen(listId: state.pathParameters['listId']!);
+            }
+        ),
+        GoRoute(
+          path: 'edit-card/:cardId',
+          builder: (BuildContext context, GoRouterState state) {
+            return EditCardScreen(cardId: state.pathParameters['cardId']!);
           },
         )
       ],

@@ -174,7 +174,7 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
   String? color;
   String idBoard;
   double pos;
-  bool subscribed;
+  bool? subscribed;
   int? softLimit;
 
   TrelloList({
@@ -184,7 +184,7 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
     this.color,
     required this.idBoard,
     required this.pos,
-    required this.subscribed,
+    this.subscribed,
     this.softLimit,
     required Auth auth,
     required TrelloLists trelloLists,
@@ -259,10 +259,10 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
 
   update({
     String? name,
-    String? closed,
+    bool? closed,
     String? idBoard,
     double? pos,
-    String? subscribed,
+    bool? subscribed,
   }) async {
     if (_auth.apiToken == null) {
       return;
@@ -273,7 +273,7 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
       if (closed != null) 'closed': closed,
       if (idBoard != null) 'idBoard': idBoard,
       if (pos != null) 'pos': pos,
-      if (subscribed != null) 'subscribed': subscribed,
+      if (subscribed != null) 'subscribed': subscribed.toString(),
     };
 
     var response = await http.put(

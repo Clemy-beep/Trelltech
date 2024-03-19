@@ -6,6 +6,7 @@ import 'package:trelltech/arbory/services/lists_service.dart';
 import 'package:trelltech/arbory/services/organization_service.dart';
 import 'package:trelltech/components/custom_appbar.dart';
 import 'package:trelltech/components/custom_bottom_navigation_bar.dart';
+import 'package:trelltech/components/custom_button.dart';
 import 'package:trelltech/components/custom_card.dart';
 import 'package:trelltech/components/custom_title.dart';
 import 'package:trelltech/components/delete_text_button.dart';
@@ -109,13 +110,21 @@ class BoardScreen extends StatelessWidget {
                               color: Color.fromRGBO(20, 25, 70, 1),
                             ),
                           ),
-                          Text(
-                            organization?.displayName ?? "No organization",
-                            style: const TextStyle(
-                              fontFamily: 'LexendExa',
-                              color: Color.fromRGBO(20, 25, 70, 1),
-                            ),
-                          ),
+                          organization?.id == null
+                              ? const Text('no organization for this board', style: TextStyle(fontFamily: 'LexendExa'),)
+                              : TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.blue[100]),
+                                textStyle: MaterialStateProperty.all(const TextStyle(fontFamily: 'LexendExa', color: Colors.black)),
+                              ),
+                              onPressed: () => context.go('/org/${organization.id}'),
+                              child: Text(
+                                organization!.displayName,
+                                style: const TextStyle(
+                                  fontFamily: 'LexendExa',
+                                  color: Colors.black,
+                                ),)
+                          )
                         ],
                       );
                     },
@@ -123,10 +132,19 @@ class BoardScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Divider(),
                   const SizedBox(height: 20),
+                  const Text(
+                    'lists',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontFamily: 'LexendExa',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(20, 25, 70, 1),
+                    ),
+                  ),
                   Consumer<TrelloLists>(
                       builder: (context, lists, child) {
-                        var listsByBoard = lists.listsByBoardId[boardId];
-                        return listsByBoard == null ?
+                        return lists.listsByBoardId[boardId] == null ?
                         const Text(
                           'no lists in this board',
                           style: TextStyle(
@@ -135,34 +153,23 @@ class BoardScreen extends StatelessWidget {
                           ),) :
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text(
-                              'lists',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontFamily: 'LexendExa',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color.fromRGBO(20, 25, 70, 1),
+                            for (var list in lists.listsByBoardId[boardId]!)
+                              CustomCard(
+                                iconData: Icons.list_alt_outlined,
+                                title: list.name,
+                                subtitle: list.closed ? '❌ closed' : '✅ open',
+                                onTap: () => {
+                                  context.go('/list/${list.id}')
+                                },
                               ),
+                            CustomButton(
+                                text: "create a new list",
+                                iconName: Icons.add,
+                                onPressed: () => context.go('/create-list/${board.id}')
                             ),
-                            ListView.builder(
-                              itemCount: listsByBoard.length,
-                              shrinkWrap: true,
-                              primary: false,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return CustomCard(
-                                  iconData: Icons.list_alt_outlined,
-                                  title: listsByBoard[index].name,
-                                  subtitle: listsByBoard[index].closed ? '❌ closed' : '✅ open',
-                                  onTap: () => {
-                                    context.go('/list/${listsByBoard[index].id}')
-                                  },
-                                );
-                              },
-                            ),
+                            const SizedBox(height: 20),
                           ],
                         );
                       }

@@ -218,7 +218,7 @@ class EditBoardScreenState extends State<EditBoardScreen> {
                               MaterialStateProperty.all(Colors.lightBlueAccent),
                         ),
                         onPressed: () {
-                          context.go('/org/${widget.boardId}');
+                          context.go('/board/${widget.boardId}');
                         },
                         child: const Row(
                           children: [
