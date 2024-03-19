@@ -348,7 +348,7 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
 
     final responseJson = jsonDecode(response.body);
     log(responseJson.toString());
-    _update();
+    await _update();
   }
 
   _update() async {
@@ -368,6 +368,10 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
     final responseJson = jsonDecode(response.body);
     log(responseJson.toString());
     _updateJson(responseJson);
+
+    notifyListeners();
+
+    boards.update();
   }
 
   _updateJson(Map<String, dynamic> json) {
