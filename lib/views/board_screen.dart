@@ -35,7 +35,7 @@ class BoardScreen extends StatelessWidget {
                         width: 260,
                         child: CustomTitle(text: board?.name ?? "No board"),
                       ),
-                      CustomIconEdit(onPressed: (){}),
+                      CustomIconEdit(onPressed: (){context.go('/edit-board/${board!.id}');}),
                       CustomIconDelete(onPressed: ()=>{
                           showDialog(context: context, builder: (context){
                           return AlertDialog(
