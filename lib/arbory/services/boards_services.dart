@@ -348,7 +348,9 @@ class Board with ChangeNotifier, DiagnosticableTreeMixin {
 
     final responseJson = jsonDecode(response.body);
     log(responseJson.toString());
-    await _update();
+    _updateJson(responseJson);
+    boards.notifyListeners();
+    _update();
   }
 
   _update() async {

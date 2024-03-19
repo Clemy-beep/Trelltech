@@ -369,6 +369,10 @@ class Card {
       cardRole = json['cardRole'];
       update = true;
     }
+
+    if (update) {
+      _cards.update();
+    }
   }
 
   factory Card.fromJson(Map<String, dynamic> json, Auth auth, Cards cards) {
