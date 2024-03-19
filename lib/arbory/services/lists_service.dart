@@ -26,11 +26,9 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
 
     log(_auth.apiToken ?? '');
 
-    //get list of all boards
-    var requests = <Future>[];
     for (var board in _boards.boards) {
       log(_boards.boards[0].id);
-      requests.add(http.get(
+      await http.get(
         Uri.parse("https://api.trello.com/1/boards/${board.id}/lists"),
         headers: {
           'Authorization':
@@ -51,19 +49,19 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
           _updateData(list, board);
         }
 
-        //delete list that are not in response
+        //delete list that are not in response and in board
         List<TrelloList> tmpList = List.from(lists);
         for (var list in tmpList) {
           if (responseJson.indexWhere((element) => element['id'] == list.id) ==
-              -1) {
+                  -1 &&
+              list.idBoard == board.id) {
             lists.remove(list);
             listsById.remove(list.id);
+            listsByBoardId[list.idBoard]?.remove(list);
           }
         }
-      }));
+      });
     }
-
-    await Future.wait(requests).then((value) => log('done'));
     notifyListeners();
   }
 
@@ -80,7 +78,7 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         listsByBoardId[board.id] = [tmpList];
       } else {
         //place in list by pos from other list
-        int pos = tmpList.pos;
+        double pos = tmpList.pos;
         List<TrelloList> tmpListList = listsByBoardId[board.id]!;
         for (int i = 0; i < tmpListList.length; i++) {
           if (tmpListList[i].pos > pos) {
@@ -101,7 +99,7 @@ class TrelloLists with ChangeNotifier, DiagnosticableTreeMixin {
         log('update list position');
         listsByBoardId[board.id]!.remove(listsById[list['id']]);
         listsById[list['id']]!.updateData(list);
-        int pos = list['pos'];
+        double pos = list['pos'];
         List<TrelloList> tmpListList = listsByBoardId[board.id]!;
         for (int i = 0; i < tmpListList.length; i++) {
           if (tmpListList[i].pos > pos) {
@@ -175,7 +173,7 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
   bool closed;
   String? color;
   String idBoard;
-  int pos;
+  double pos;
   bool subscribed;
   int? softLimit;
 
@@ -214,7 +212,7 @@ class TrelloList with ChangeNotifier, DiagnosticableTreeMixin {
       closed: json['closed'],
       color: json['color'],
       idBoard: json['idBoard'],
-      pos: json['pos'] ?? 0,
+      pos: (json['pos'] ?? 0.0).toDouble(),
       subscribed: json['subscribed'],
       softLimit: json['softLimit'],
       auth: auth,
