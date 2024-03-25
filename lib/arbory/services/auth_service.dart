@@ -7,7 +7,7 @@ import 'dart:developer';
 
 //auth in trello with autorize
 class Auth with ChangeNotifier, DiagnosticableTreeMixin {
-  static const String apiKey = '081fee176f0aac6a489b486f3e2ced6a';
+  static const String apiKey = 'YOUR_API_KEY';
   String? apiToken;
 
   void _setToken(String token) {
